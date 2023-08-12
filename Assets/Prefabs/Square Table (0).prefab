@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5958553704950640599}
   - component: {fileID: 2346023871357650012}
   - component: {fileID: 5687658681414085475}
+  - component: {fileID: 1840698480644937552}
   m_Layer: 0
   m_Name: Square Table (0)
   m_TagString: Tables
@@ -34,7 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8242798553910264609
 MeshFilter:
@@ -155,3 +156,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1840698480644937552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247025501234852295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be631badc3624f48ac4ca0b7cf122c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tableNumber: 0
