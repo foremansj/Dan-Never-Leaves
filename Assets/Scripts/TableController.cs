@@ -4,70 +4,62 @@ using UnityEngine;
 
 public class TableController : MonoBehaviour
 {
-    
-    [SerializeField] GameObject linkedTable;
-    int maxCustomers;
-    int currentCustomers;
+    [SerializeField] int maxCustomers;
+    [SerializeField] int tableNumber;
+    [SerializeField] List<GameObject> seats;
+    GameObject checkHolder;
+    GameObject orderHolder;
 
-    //bool isDirty;
-    //bool isOccupied = false;
+    PartyController partyController;
+
+    void Awake()
+    {
+        checkHolder = this.transform.Find("Check Holder").gameObject;
+        orderHolder = this.transform.Find("Order Holder").gameObject;
+    }
 
     void Start()
     {
-        //tableNumber = int.Parse(this.name);
+        // make sure seats are named correctly and in order
+        maxCustomers = seats.Count;
+        for(int i = 0; i < seats.Count; i++)
+        {
+            seats[i].name = "Seat #" + (i + 1);
+        }
+    }
+    
+    public int GetMaxCustomers()
+    {
+        return maxCustomers;
     }
 
-    // Update is called once per frame
-    void Update()
+    public GameObject GetCustomerAtSeat(int seatNumber)
     {
-        
+        return seats[seatNumber];
     }
 
     public int GetTableNumber()
     {
-        return linkedTable.GetComponent<TableInfo>().GetTableNumber();
+        return tableNumber;
     }
 
-    public int GetMaxCustomers()
+    public GameObject GetCheckHolder()
     {
-        return linkedTable.GetComponent<TableInfo>().GetMaxCustomers();
+        return checkHolder;
     }
 
-    public int GetCurrentCustomers()
+    public GameObject GetOrderHolder()
     {
-        return currentCustomers;
+        return orderHolder;
     }
 
-    public GameObject GetLinkedTable()
+    public void SetActiveParty(PartyController party)
     {
-        return linkedTable;
+        partyController = party;
     }
 
-    public void AddCustomer()
+    public PartyController GetActiveParty()
     {
-        currentCustomers++;
-    }
-
-    public void CloseTable()
-    {
-        currentCustomers = 0;
-        //move customer check to closed checks
-        //isOccupied = false;
-    }
-
-    public void SitTable()
-    {
-        //isOccupied = true;
-    }
-
-    public void ResetTable()
-    {
-        //isDirty = false;
-    }
-
-    public void DebugCheck()
-    {
-        Debug.Log("Table Number = " + GetTableNumber());
-        Debug.Log("Max Customers = " + GetMaxCustomers());
+        return partyController;
     }
 }

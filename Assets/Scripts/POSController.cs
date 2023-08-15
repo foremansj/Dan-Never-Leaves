@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class POSController : MonoBehaviour
 {
-    //[Header("Receipt Text")]
-    //[SerializeField] TextMeshProUGUI itemText;
-    //[SerializeField] TextMeshProUGUI qtyText;
-    //[SerializeField] TextMeshProUGUI eachCostText;
-    //[SerializeField] TextMeshProUGUI totalCostText;
-
     [Header("POS Panels")]
     [SerializeField] GameObject backgroundPanel;
+    [SerializeField] GameObject loginScreenPanel;
     [SerializeField] GameObject receiptPanel;
     [SerializeField] GameObject menuPanel;
     [SerializeField] GameObject floorMapPanel;
+    [SerializeField] GameObject paymentPanel;
+    [SerializeField] GameObject openNotesButton;
+    [SerializeField] GameObject closeNotesButton;
+    [SerializeField] GameObject toastWithNotes;
+    [SerializeField] GameObject notesWithToast;
+    [SerializeField] GameObject mainToast;
 
     [Header("Checks & Orders")]
     [SerializeField] GameObject checkPrefab;
+    [SerializeField] GameObject closedCheckHolder;
     [SerializeField] GameObject orderPrefab;
     [SerializeField] TextMeshProUGUI itemNameText;
     [SerializeField] TextMeshProUGUI itemQTYText;
@@ -36,29 +39,32 @@ public class POSController : MonoBehaviour
     [SerializeField] TextMeshProUGUI tipPercentText;
     [SerializeField] TextMeshProUGUI tipTotalText;
 
-    
     int receiptNumberCounter = 1;
 
     PlayerInput playerInput;
-    TableController tableController;
-    CustomerCheck activeCheck;
-    CustomerCheck originalCheck;
+    PlayerInteraction playerInteraction;
     
+    POSTableController tableController;
+    
+    public CustomerCheck activeCheck;
+    int activeTableNumber;
 
     void Awake()
     {
         playerInput = FindObjectOfType<PlayerInput>();
+        playerInteraction = FindObjectOfType<PlayerInteraction>();
     }
 
     void Start()
     {
-        tableController = GetComponent<TableController>();
+        tableController = GetComponent<POSTableController>();
     }
     
     
     public void OpenFloorMap()
     {
-        playerInput.SwitchCurrentActionMap("UI");
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
         backgroundPanel.SetActive(true);
         floorMapPanel.SetActive(true);
     }
@@ -69,18 +75,23 @@ public class POSController : MonoBehaviour
         receiptPanel.SetActive(true);
         menuPanel.SetActive(true);
         SetOrderScreen(activeCheck);
+        openNotesButton.SetActive(true);
     }
 
     public void EscapePOS()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
         floorMapPanel.SetActive(false);
         receiptPanel.SetActive(false);
         menuPanel.SetActive(false);
         backgroundPanel.SetActive(false);
+        openNotesButton.SetActive(false);
+        playerInteraction.SwitchCameras();
         playerInput.SwitchCurrentActionMap("Player");
     }
 
-    public void CreateCustomerCheck(TableController tableController)
+    public void CreateCustomerCheck(POSTableController tableController)
     {
         GameObject checkHolder = tableController.GetLinkedTable().transform.Find("Check Holder").gameObject;
         if(checkHolder.transform.childCount > 0)            // this.transform.Find("Check Holder").childCount > 0)
@@ -88,10 +99,8 @@ public class POSController : MonoBehaviour
             GameObject newCheck = Instantiate(checkHolder.transform.GetChild(0).gameObject, new Vector3(0,0,0), Quaternion.identity);
             newCheck.transform.SetParent(checkHolder.transform);
             newCheck.name = "Temp Check #" + newCheck.GetComponent<CustomerCheck>().checkNumber;
-            Debug.Log("active check = " + activeCheck);
             
             activeCheck = newCheck.GetComponent<CustomerCheck>();
-            
             return;
         }
         
@@ -103,30 +112,22 @@ public class POSController : MonoBehaviour
             newCheck.GetComponent<CustomerCheck>().tableNumber = tableController.GetTableNumber();
             newCheck.name = "Temp Check #" + newCheck.GetComponent<CustomerCheck>().checkNumber;
             
-
             activeCheck = newCheck.GetComponent<CustomerCheck>();
             receiptNumberCounter++;
-            //activeCheck.checkNumber = receiptNumberCounter;
-            //activeCheck.tableNumber = tableController.GetTableNumber();
-            //originalCheck = activeCheck;
-            
-            //activeCheck.name = "Temp Check #" + receiptNumberCounter;
-            
             
             SetOrderScreen(activeCheck);
-            Debug.Log("Active Check = " + activeCheck);
         }
-        
     }
 
     void SetOrderScreen(CustomerCheck check)
     {
         activeCheck = check;
+        activeTableNumber = activeCheck.GetTableNumber();
         ResetCheckScreen();
+        NormalizeToastScreens(activeCheck);
 
         float subtotal = 0;
         float taxTotal = 0;
-
 
         check.CalculateTotals();
 
@@ -154,7 +155,6 @@ public class POSController : MonoBehaviour
             tipTotalText.text = string.Format("{0:C}", check.tipAmount);
             totalCheckCostText.text = string.Format("{0:C}", subtotal + taxTotal - check.creditsAmount - check.discountsAmount + check.tipAmount);
         }
-
     }
 
     void ResetCheckScreen()
@@ -197,31 +197,118 @@ public class POSController : MonoBehaviour
 
     public void SendChanges()
     {
-        //if the current active order is on a table that was already established, we need to replace the original check with the updated one
-        //and we need to assign a new name to the temp check, and update the check number
-        //then we need to delete the original (now outdated) check
+        //if there is more than one check on the table, rename the new check, destroy the old check, clear the active check
+        if(activeCheck.transform.parent.childCount > 1)
+        {
+            activeCheck.name = "Check #" + activeCheck.transform.parent.GetChild(0).GetComponent<CustomerCheck>().checkNumber;
+            Destroy(activeCheck.transform.parent.GetChild(0).gameObject);
+            activeCheck = null;
+        }
+        //if there is only one check, rename the check, then clear the active check
+        else
+        {
+            activeCheck.name = "Check #" + activeCheck.checkNumber;
+            activeCheck = null;
+        }
+    }
+
+    public void SendAndStay()
+    {
+        //Same method as send and stay but without resetting the active check
         if(activeCheck.transform.parent.childCount > 1)
         {
             activeCheck.name = "Check #" + activeCheck.transform.parent.GetChild(0).GetComponent<CustomerCheck>().checkNumber;
             Destroy(activeCheck.transform.parent.GetChild(0).gameObject);
         }
-        //otherise is only one child object, there is only one check, we need to save it and update the name
+        
         else
         {
             activeCheck.name = "Check #" + activeCheck.checkNumber;
         }
-
     }
 
     public void CancelChanges()
     {
         //the current temporary check will be deleted without saving any changes
-        Destroy(activeCheck.gameObject);
+        if(activeCheck.name.Contains("Temp"))
+        {
+            Destroy(activeCheck.gameObject);
+        }
+        
+        EscapePOS();
     }
 
+    public void CloseCheck()
+    {
+        activeCheck.transform.SetParent(closedCheckHolder.transform);
+        activeCheck = null;
+        //move check to closed check holder
+    }
     
+    public void OpenPaymentScreen()
+    {
+
+    }
+
     public int GetReceiptNumber()
     {
         return receiptNumberCounter;
+    }
+
+    public void NormalizeToastScreens(CustomerCheck check)
+    {
+        if(gameObject == mainToast) //&& toastWithNotes.activeInHierarchy == false)
+        {
+            toastWithNotes.GetComponent<POSController>().activeCheck = activeCheck;
+        }
+        
+        else if(gameObject == toastWithNotes)
+        {
+            mainToast.GetComponent<POSController>().activeCheck = activeCheck;
+        }
+    }
+
+    public void OpenNotesToast()
+    {     
+        NormalizeToastScreens(activeCheck);
+        
+        mainToast.SetActive(false);
+        /*backgroundPanel.SetActive(false);
+        loginScreenPanel.SetActive(false);
+        receiptPanel.SetActive(false);
+        menuPanel.SetActive(false);
+        floorMapPanel.SetActive(false);
+        //paymentPanel.SetActive(false);
+        openNotesButton.SetActive(false);
+        */
+        //closeNotesButton.SetActive(true);
+        toastWithNotes.SetActive(true);
+        notesWithToast.SetActive(true);
+    }
+
+    public void CloseNotesWithToast()
+    {
+        NormalizeToastScreens(activeCheck);
+        
+        //closeNotesButton.SetActive(false);
+        toastWithNotes.SetActive(false);
+        notesWithToast.SetActive(false);
+
+        mainToast.SetActive(true);
+        /*backgroundPanel.SetActive(true);
+        //loginScreenPanel.SetActive(true);
+        receiptPanel.SetActive(true);
+        menuPanel.SetActive(true);
+        //floorMapPanel.SetActive(true);
+        //paymentPanel.SetActive(true);
+        openNotesButton.SetActive(true);*/
+    }
+
+    private void OnEnable()
+    {
+        if(activeCheck != null)
+        {
+            SetOrderScreen(activeCheck);
+        }
     }
 }

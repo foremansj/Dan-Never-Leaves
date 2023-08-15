@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using Cinemachine;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    [SerializeField] GameObject notepadPrefab;
+    public PlayerInput playerInput;
+
+    [SerializeField] GameObject orderingCanvas;
+    [SerializeField] ServerNotes serverNotes;
     [SerializeField] POSController pOSController;
+    [SerializeField] CinemachineVirtualCamera followCamera;
+    [SerializeField] CinemachineVirtualCamera hardLookCamera;
     
-    bool isTouchingTable = false;
+    GameObject tableTouched; 
+    GameObject newLookAtTargetObject;
+
     bool isTouchingPOS = false;
 
-    string tableNumber; 
-
-    PlayerInput playerInput;
-    
     void Start()
     {
        playerInput = GetComponent<PlayerInput>();
@@ -23,61 +27,36 @@ public class PlayerInteraction : MonoBehaviour
 
     void OnInteract(InputValue value)
     {
-        if(value != null && isTouchingTable == true)
+        if(value != null && tableTouched != null)
         {
-            playerInput.SwitchCurrentActionMap("UI");
-            TakeOrder();
+            orderingCanvas.SetActive(true);
+            serverNotes.OpenTableNotes(tableTouched);
+            SwitchCameras();
+            LookAtObject(tableTouched.GetComponent<TableController>().GetCustomerAtSeat(0));
+            playerInput.SwitchCurrentActionMap("Taking Orders");
+            Debug.Log("Action Map =" + playerInput.currentActionMap);
         }
 
         if(value != null && isTouchingPOS == true)
         {
+            playerInput.SwitchCurrentActionMap("UI");
+            SwitchCameras();
+            LookAtObject(pOSController.gameObject);
+            pOSController.enabled = true;
             pOSController.OpenFloorMap();
         }
-    }
-
-    //finish taking order?
-    //enter button ends order, closes window
-    
-    void TakeOrder()
-    {
-        if(!isTouchingTable)
-        {
-            //close order canvas
-            //orderCanvas.gameObject.SetActive(false);
-            return;
-        }
-        else
-        {
-            //stop movement
-            playerInput.SwitchCurrentActionMap("UI");
-            
-            //check if table already has notes
-            //if it does, open those up
-            //if not, create new notes
-            
-            Instantiate(notepadPrefab, new Vector3(0,0,0), Quaternion.identity);
-        }
-    }
-
-    public void SaveOrderNotes()
-    {
-        //save the notes for that table
-        //store them on the table?
-        //close the order notepad
     }
 
     void OnTriggerEnter(Collider other) 
     {
         if(other.transform.tag == "Tables")
         {
-            isTouchingTable = true;
-            tableNumber = other.name;
+            tableTouched = other.gameObject;
         }
 
         if(other.transform.tag == "POS")
         {
             isTouchingPOS = true;
-            Debug.Log("touching POS");
         }
     }
 
@@ -85,12 +64,37 @@ public class PlayerInteraction : MonoBehaviour
     {
         if(other.transform.tag == "Tables")
         {
-            isTouchingTable = false;
+            tableTouched = null;
         }
         
         if(other.transform.tag == "POS")
         {
             isTouchingPOS = false;
         }
+    }
+
+    public void SwitchCameras()
+    {
+        if(followCamera.Priority > hardLookCamera.Priority)
+        {
+            followCamera.Priority = 0;
+            hardLookCamera.Priority = 1;
+        }
+
+        else
+        {
+            followCamera.Priority = 1;
+            hardLookCamera.Priority = 0;
+        }
+    }
+
+    public void LookAtObject(GameObject lookObject)
+    {
+        hardLookCamera.LookAt = lookObject.transform;
+    }
+
+    public GameObject GetTableTouched()
+    {
+        return tableTouched;
     }
 }

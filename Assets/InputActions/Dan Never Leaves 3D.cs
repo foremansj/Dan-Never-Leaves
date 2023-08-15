@@ -833,6 +833,74 @@ public partial class @DanNeverLeaves3D: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Taking Orders"",
+            ""id"": ""49f03be7-4e75-400b-9202-7990a1acab36"",
+            ""actions"": [
+                {
+                    ""name"": ""Escape Table"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa793664-54e5-4015-a4dd-49d018d3164c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Next Order"",
+                    ""type"": ""Button"",
+                    ""id"": ""c34186c3-df6f-4303-8590-473fe87d2b6a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Enter Key"",
+                    ""type"": ""Button"",
+                    ""id"": ""dce8e989-6544-41a4-8d2a-3a53649e12d6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""82682e84-3afd-465b-a116-6beebe2db1bc"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape Table"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7de3d6f9-8ba3-4c0e-85ff-9b1dd1e5e2c5"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Next Order"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49d71e55-b95d-4aac-9c05-0038b414d60e"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Enter Key"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -917,6 +985,11 @@ public partial class @DanNeverLeaves3D: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // Taking Orders
+        m_TakingOrders = asset.FindActionMap("Taking Orders", throwIfNotFound: true);
+        m_TakingOrders_EscapeTable = m_TakingOrders.FindAction("Escape Table", throwIfNotFound: true);
+        m_TakingOrders_NextOrder = m_TakingOrders.FindAction("Next Order", throwIfNotFound: true);
+        m_TakingOrders_EnterKey = m_TakingOrders.FindAction("Enter Key", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1170,6 +1243,68 @@ public partial class @DanNeverLeaves3D: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Taking Orders
+    private readonly InputActionMap m_TakingOrders;
+    private List<ITakingOrdersActions> m_TakingOrdersActionsCallbackInterfaces = new List<ITakingOrdersActions>();
+    private readonly InputAction m_TakingOrders_EscapeTable;
+    private readonly InputAction m_TakingOrders_NextOrder;
+    private readonly InputAction m_TakingOrders_EnterKey;
+    public struct TakingOrdersActions
+    {
+        private @DanNeverLeaves3D m_Wrapper;
+        public TakingOrdersActions(@DanNeverLeaves3D wrapper) { m_Wrapper = wrapper; }
+        public InputAction @EscapeTable => m_Wrapper.m_TakingOrders_EscapeTable;
+        public InputAction @NextOrder => m_Wrapper.m_TakingOrders_NextOrder;
+        public InputAction @EnterKey => m_Wrapper.m_TakingOrders_EnterKey;
+        public InputActionMap Get() { return m_Wrapper.m_TakingOrders; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TakingOrdersActions set) { return set.Get(); }
+        public void AddCallbacks(ITakingOrdersActions instance)
+        {
+            if (instance == null || m_Wrapper.m_TakingOrdersActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TakingOrdersActionsCallbackInterfaces.Add(instance);
+            @EscapeTable.started += instance.OnEscapeTable;
+            @EscapeTable.performed += instance.OnEscapeTable;
+            @EscapeTable.canceled += instance.OnEscapeTable;
+            @NextOrder.started += instance.OnNextOrder;
+            @NextOrder.performed += instance.OnNextOrder;
+            @NextOrder.canceled += instance.OnNextOrder;
+            @EnterKey.started += instance.OnEnterKey;
+            @EnterKey.performed += instance.OnEnterKey;
+            @EnterKey.canceled += instance.OnEnterKey;
+        }
+
+        private void UnregisterCallbacks(ITakingOrdersActions instance)
+        {
+            @EscapeTable.started -= instance.OnEscapeTable;
+            @EscapeTable.performed -= instance.OnEscapeTable;
+            @EscapeTable.canceled -= instance.OnEscapeTable;
+            @NextOrder.started -= instance.OnNextOrder;
+            @NextOrder.performed -= instance.OnNextOrder;
+            @NextOrder.canceled -= instance.OnNextOrder;
+            @EnterKey.started -= instance.OnEnterKey;
+            @EnterKey.performed -= instance.OnEnterKey;
+            @EnterKey.canceled -= instance.OnEnterKey;
+        }
+
+        public void RemoveCallbacks(ITakingOrdersActions instance)
+        {
+            if (m_Wrapper.m_TakingOrdersActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ITakingOrdersActions instance)
+        {
+            foreach (var item in m_Wrapper.m_TakingOrdersActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_TakingOrdersActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public TakingOrdersActions @TakingOrders => new TakingOrdersActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1235,5 +1370,11 @@ public partial class @DanNeverLeaves3D: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    public interface ITakingOrdersActions
+    {
+        void OnEscapeTable(InputAction.CallbackContext context);
+        void OnNextOrder(InputAction.CallbackContext context);
+        void OnEnterKey(InputAction.CallbackContext context);
     }
 }

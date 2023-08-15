@@ -38,4 +38,9 @@ public class CustomerCheck : MonoBehaviour
 
         tipAmount = tipPercent * checkTotal;
     }
+
+    public int GetTableNumber()
+    {
+        return tableNumber;
+    }
 }

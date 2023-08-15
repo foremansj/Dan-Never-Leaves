@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        Cursor.lockState = CursorLockMode.Confined;
+        
     }
 
     // Update is called once per frame
