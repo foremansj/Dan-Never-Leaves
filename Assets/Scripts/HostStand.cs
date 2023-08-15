@@ -8,6 +8,7 @@ public class HostStand : MonoBehaviour
     [Header("Waiting List")]
     public List<GameObject> partiesWaitingToBeSeated;
     [SerializeField] float seatingDelay;
+    [SerializeField] GameObject waitingArea;
 
     [Header("Table Tracking")]
     [SerializeField] List<TableController> openTablesList;
@@ -20,6 +21,7 @@ public class HostStand : MonoBehaviour
     private void Awake()
     {
         partySpawner = FindObjectOfType<PartySpawner>();
+        //partiesWaitingToBeSeated = new List<GameObject>();
     }
 
     private void Start()
@@ -40,20 +42,22 @@ public class HostStand : MonoBehaviour
     {   
         while(isSeatingCustomers)
         {
-            if(partiesWaitingToBeSeated.Count >= 1)
+            if(partiesWaitingToBeSeated != null)
             {
                 for(int i = 0; i < partiesWaitingToBeSeated.Count; i++)
                 {
-                    Debug.Log("Seating Customers");
                     PartyController party = partiesWaitingToBeSeated[i].GetComponent<PartyController>();
                     TableController table = FindATable(party);
+                    
                     if(table != null)
                     {
                         SeatTable(party, table);
                         yield return new WaitForSeconds(seatingDelay);
                     }
+                    
                     else
                     {
+                        SendPartyToWaitingArea(party);
                         yield return null;
                     }
                 }
@@ -67,7 +71,6 @@ public class HostStand : MonoBehaviour
         int index = openTablesList.FindIndex(table => table.GetMaxCustomers() == party.GetPartySize());
         if(index >= 0)
         {
-            Debug.Log("table index =" + index);
             return openTablesList[index];
         }
         else
@@ -75,7 +78,6 @@ public class HostStand : MonoBehaviour
             index = openTablesList.FindIndex(table => table.GetMaxCustomers() == (party.GetPartySize() + 1));
             if(index >= 0)
             {
-                Debug.Log("table index =" + index);
                 return openTablesList[index];
             }
             else
@@ -87,13 +89,13 @@ public class HostStand : MonoBehaviour
     
     void SeatTable(PartyController party, TableController table)
     {
-        partiesWaitingToBeSeated.Remove(party.gameObject);
         occupiedTablesList.Add(table);
-        //party.tableDestination = table;
+        openTablesList.Remove(table);
         party.AssignTable(table);
         party.SeatParty();
-                
-        openTablesList.Remove(table);
+        partiesWaitingToBeSeated.Remove(party.gameObject);
+        table.SetActiveParty(party);
+
         return;
     }
 
@@ -118,5 +120,12 @@ public class HostStand : MonoBehaviour
         }
     }
 
-    
+    public void SendPartyToWaitingArea(PartyController party)
+    {
+        for(int i = 0; i < party.GetPartySize(); i++)
+        {
+            CustomerController customer = party.partyCustomers[i].GetComponent<CustomerController>();
+            customer.MoveToDestination(waitingArea.transform);
+        }
+    }
 }

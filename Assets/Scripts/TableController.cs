@@ -7,9 +7,11 @@ public class TableController : MonoBehaviour
     [SerializeField] int maxCustomers;
     [SerializeField] int tableNumber;
     [SerializeField] List<GameObject> seats;
+    public PartyController currentParty;
     GameObject checkHolder;
     GameObject orderHolder;
 
+    public bool hasCustomersSeated;
     PartyController partyController;
 
     void Awake()
@@ -55,11 +57,11 @@ public class TableController : MonoBehaviour
 
     public void SetActiveParty(PartyController party)
     {
-        partyController = party;
+        currentParty = party;
     }
 
-    public PartyController GetActiveParty()
+    public PartyController GetCurrentParty()
     {
-        return partyController;
+        return currentParty;
     }
 }

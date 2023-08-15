@@ -7,7 +7,7 @@ using Cinemachine;
 
 public class POSController : MonoBehaviour
 {
-    [Header("POS Panels")]
+    [Header("UI Panels")]
     [SerializeField] GameObject backgroundPanel;
     [SerializeField] GameObject loginScreenPanel;
     [SerializeField] GameObject receiptPanel;
@@ -19,6 +19,7 @@ public class POSController : MonoBehaviour
     [SerializeField] GameObject toastWithNotes;
     [SerializeField] GameObject notesWithToast;
     [SerializeField] GameObject mainToast;
+    [SerializeField] GameObject mainNotes;
 
     [Header("Checks & Orders")]
     [SerializeField] GameObject checkPrefab;
@@ -45,6 +46,7 @@ public class POSController : MonoBehaviour
     PlayerInteraction playerInteraction;
     
     POSTableController tableController;
+    CameraController cameraController;
     
     public CustomerCheck activeCheck;
     int activeTableNumber;
@@ -53,6 +55,7 @@ public class POSController : MonoBehaviour
     {
         playerInput = FindObjectOfType<PlayerInput>();
         playerInteraction = FindObjectOfType<PlayerInteraction>();
+        cameraController = FindObjectOfType<CameraController>();
     }
 
     void Start()
@@ -87,7 +90,7 @@ public class POSController : MonoBehaviour
         menuPanel.SetActive(false);
         backgroundPanel.SetActive(false);
         openNotesButton.SetActive(false);
-        playerInteraction.SwitchCameras();
+        cameraController.SwitchCameras();
         playerInput.SwitchCurrentActionMap("Player");
     }
 
@@ -284,6 +287,24 @@ public class POSController : MonoBehaviour
         //closeNotesButton.SetActive(true);
         toastWithNotes.SetActive(true);
         notesWithToast.SetActive(true);
+    }
+
+    public void SetPOSNotepad()
+    {
+        GameObject table = activeCheck.transform.parent.parent.gameObject;
+        
+        ServerNotes mainNotepad = mainNotes.GetComponent<ServerNotes>();
+        ServerNotes toastNotepad = notesWithToast.GetComponent<ServerNotes>();
+        toastNotepad.SetNotesTableNumber(table);
+        if(mainNotepad.workingTableNotes.ContainsKey(table.name))
+        {
+            notesWithToast.GetComponent<ServerNotes>().serverNotesInputField.text = mainNotepad.workingTableNotes[table.name];
+        }
+        else
+        {
+            notesWithToast.GetComponent<ServerNotes>().serverNotesInputField.text = "";
+            return;
+        }
     }
 
     public void CloseNotesWithToast()

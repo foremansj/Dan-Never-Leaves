@@ -13,17 +13,6 @@ public class POSTableController : MonoBehaviour
     //bool isDirty;
     //bool isOccupied = false;
 
-    void Start()
-    {
-        //tableNumber = int.Parse(this.name);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public int GetTableNumber()
     {
         return linkedTable.GetComponent<TableController>().GetTableNumber();

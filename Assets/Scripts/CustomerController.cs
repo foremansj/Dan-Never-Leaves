@@ -16,6 +16,7 @@ public class CustomerController : MonoBehaviour
     public PartyController party;
     MenuDatabase menuDatabase;
     [SerializeField] GameObject customerHead;
+    public bool isSeated;
 
     [Header("Customer Order")]
     public MenuItemSO firstCourse;
@@ -25,6 +26,7 @@ public class CustomerController : MonoBehaviour
     public MenuItemSO retailPurchase;
     public bool hasOrdered = false;
     public bool isChild = false;
+
 
 
     void Awake()
@@ -57,7 +59,7 @@ public class CustomerController : MonoBehaviour
         thisAgent.SetDestination(transform.position);
     }
 
-    public IEnumerator moveCustomer(Transform trasnform, float delay)
+    public IEnumerator moveCustomer(Transform transform, float delay)
     {
         thisAgent.SetDestination(transform.position);
         yield return new WaitForSeconds(delay);
@@ -75,6 +77,8 @@ public class CustomerController : MonoBehaviour
                 thisRigidbody.constraints = RigidbodyConstraints.FreezePosition;
                 thisRigidbody.isKinematic = true;
                 gameObject.transform.position = customerSeat.transform.position;
+                isSeated = true;
+                other.GetComponent<TableController>().hasCustomersSeated = true;
             }
         }
     }
@@ -114,5 +118,10 @@ public class CustomerController : MonoBehaviour
     void AdjustHappiness()
     {
 
+    }
+
+    public GameObject GetCustomerHead()
+    {
+        return customerHead;
     }
 }

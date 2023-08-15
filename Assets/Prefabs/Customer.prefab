@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 948005962839432808}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 13.4, y: 1.25, z: 11.86}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.75, y: 1, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5676522391511025309}
@@ -217,6 +217,7 @@ MonoBehaviour:
   partyTable: {fileID: 0}
   party: {fileID: 0}
   customerHead: {fileID: 3194123231212733110}
+  isSeated: 0
   firstCourse: {fileID: 0}
   mainCourse: {fileID: 0}
   drink: {fileID: 0}
@@ -248,7 +249,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3194123231212733110}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.65, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

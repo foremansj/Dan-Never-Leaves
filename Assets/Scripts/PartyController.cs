@@ -7,11 +7,7 @@ public class PartyController : MonoBehaviour
 {
     [Header("Orders & Menu")]
     public List<MenuItemSO> fullPartyOrder;
-    [SerializeField] List<MenuItemSO> appetizers;
-    [SerializeField] List<MenuItemSO> soupsAndSalads;
-    [SerializeField] List<MenuItemSO> entrees;
-    [SerializeField] List<MenuItemSO> desserts;
-    [SerializeField] List<MenuItemSO> drinks;
+    
 
     [Header("Host & Seating")]
     public TableController tableDestination;
@@ -38,11 +34,6 @@ public class PartyController : MonoBehaviour
         hostStand.partiesWaitingToBeSeated.Add(gameObject);
     }
 
-    private void Update()
-    {
-
-    }
-    
     public void AddCustomersToParty(GameObject newCustomer)
     {
         partyCustomers.Add(newCustomer);
@@ -86,30 +77,5 @@ public class PartyController : MonoBehaviour
     public List<MenuItemSO> GetFullPartyOrder()
     {
         return fullPartyOrder;
-    }
-
-    public List<MenuItemSO> GetAppetizers()
-    {
-        return appetizers;
-    }
-
-    public List<MenuItemSO> GetSoupsAndSalads()
-    {
-        return soupsAndSalads;
-    }
-
-    public List<MenuItemSO> GetEntrees()
-    {
-        return entrees;
-    }
-
-    public List<MenuItemSO> GetDesserts()
-    {
-        return desserts;
-    }
-
-    public List<MenuItemSO> GetDrinks()
-    {
-        return drinks;
     }
 }

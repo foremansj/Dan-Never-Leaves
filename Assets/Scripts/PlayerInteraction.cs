@@ -12,14 +12,16 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] GameObject orderingCanvas;
     [SerializeField] ServerNotes serverNotes;
     [SerializeField] POSController pOSController;
-    [SerializeField] CinemachineVirtualCamera followCamera;
-    [SerializeField] CinemachineVirtualCamera hardLookCamera;
     
-    GameObject tableTouched; 
-    GameObject newLookAtTargetObject;
+    CameraController cameraController;
+    public GameObject tableTouched; 
 
     bool isTouchingPOS = false;
-
+    
+    private void Awake()
+    {
+        cameraController = FindObjectOfType<CameraController>();
+    }
     void Start()
     {
        playerInput = GetComponent<PlayerInput>();
@@ -31,17 +33,16 @@ public class PlayerInteraction : MonoBehaviour
         {
             orderingCanvas.SetActive(true);
             serverNotes.OpenTableNotes(tableTouched);
-            SwitchCameras();
-            LookAtObject(tableTouched.GetComponent<TableController>().GetCustomerAtSeat(0));
+            cameraController.SwitchCameras();
+            //cameraController.HardLookAtObject(tableTouched.GetComponent<TableController>().GetCustomerAtSeat(0));
             playerInput.SwitchCurrentActionMap("Taking Orders");
-            Debug.Log("Action Map =" + playerInput.currentActionMap);
         }
 
         if(value != null && isTouchingPOS == true)
         {
             playerInput.SwitchCurrentActionMap("UI");
-            SwitchCameras();
-            LookAtObject(pOSController.gameObject);
+            cameraController.SwitchCameras();
+            cameraController.HardLookAtObject(pOSController.gameObject);
             pOSController.enabled = true;
             pOSController.OpenFloorMap();
         }
@@ -52,11 +53,19 @@ public class PlayerInteraction : MonoBehaviour
         if(other.transform.tag == "Tables")
         {
             tableTouched = other.gameObject;
+            TableController tableControl = tableTouched.GetComponent<TableController>();
+            cameraController.MoveHardLookCamera(tableTouched.transform);
+            if(tableControl.hasCustomersSeated)
+            {
+                GameObject customerHead = tableControl.GetCurrentParty().partyCustomers[0].GetComponent<CustomerController>().GetCustomerHead();
+                cameraController.HardLookAtObject(customerHead);
+            }
         }
 
         if(other.transform.tag == "POS")
         {
             isTouchingPOS = true;
+            cameraController.MoveHardLookCamera(gameObject.transform);
         }
     }
 
@@ -71,26 +80,6 @@ public class PlayerInteraction : MonoBehaviour
         {
             isTouchingPOS = false;
         }
-    }
-
-    public void SwitchCameras()
-    {
-        if(followCamera.Priority > hardLookCamera.Priority)
-        {
-            followCamera.Priority = 0;
-            hardLookCamera.Priority = 1;
-        }
-
-        else
-        {
-            followCamera.Priority = 1;
-            hardLookCamera.Priority = 0;
-        }
-    }
-
-    public void LookAtObject(GameObject lookObject)
-    {
-        hardLookCamera.LookAt = lookObject.transform;
     }
 
     public GameObject GetTableTouched()
