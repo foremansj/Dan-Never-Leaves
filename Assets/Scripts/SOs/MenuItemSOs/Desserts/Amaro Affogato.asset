@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Amaro Affogato
   description: Amaro poured over french vanilla ice cream
   baseCost: 9.99
-  taxCost: 0.1
-  ticketTimeSeconds: 20
+  taxRate: 0.01
+  ticketTimeSeconds: 0

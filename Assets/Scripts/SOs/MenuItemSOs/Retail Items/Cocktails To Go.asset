@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Cocktails To Go
   description: Cocktail to go
   baseCost: 12
-  taxCost: 0.75
+  taxRate: 0.0625
   ticketTimeSeconds: 10

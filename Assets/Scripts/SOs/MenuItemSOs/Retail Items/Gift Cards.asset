@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Gift Cards
   description: Gift card
   baseCost: 50
-  taxCost: 0
+  taxRate: 0.01
   ticketTimeSeconds: 10

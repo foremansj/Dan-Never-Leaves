@@ -52,6 +52,7 @@ public class HostStand : MonoBehaviour
                     if(table != null)
                     {
                         SeatTable(party, table);
+                        party.GetComponent<CheckController>().tableNumber = table.GetTableNumber();
                         yield return new WaitForSeconds(seatingDelay);
                     }
                     

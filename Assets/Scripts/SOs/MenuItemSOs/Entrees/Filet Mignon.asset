@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Filet Mignon
   description: 8 oz filet mignon
   baseCost: 39.99
-  taxCost: 0.4
+  taxRate: 0.01
   ticketTimeSeconds: 60

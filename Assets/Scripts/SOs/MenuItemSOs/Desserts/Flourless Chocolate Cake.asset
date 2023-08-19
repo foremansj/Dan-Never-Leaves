@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Flourless Chocolate Cake
   description: Decadent warm chocolate cake with chocolate sauce
   baseCost: 15.99
-  taxCost: 0.16
-  ticketTimeSeconds: 35
+  taxRate: 0.01
+  ticketTimeSeconds: 0

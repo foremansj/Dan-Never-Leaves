@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Wine
   description: Fermented grape soda
   baseCost: 15
-  taxCost: 0.9375
+  taxRate: 0.0625
   ticketTimeSeconds: 15

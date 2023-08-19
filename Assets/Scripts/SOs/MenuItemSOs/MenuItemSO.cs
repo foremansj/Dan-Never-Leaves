@@ -10,13 +10,13 @@ public class MenuItemSO : ScriptableObject
     public string description;
 
     public float baseCost;
-    public float taxCost;
+    public float taxRate;
     
     public float ticketTimeSeconds;
 
     public float GetTotalCost()
     {
-        return (baseCost + taxCost);
+        return baseCost + (baseCost * taxRate);
     }
 
 }

@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: S'mores Pie
   description: Chocolate and marshmellow pie with graham cracker crust
   baseCost: 13.99
-  taxCost: 0.14
-  ticketTimeSeconds: 20
+  taxRate: 0.01
+  ticketTimeSeconds: 0

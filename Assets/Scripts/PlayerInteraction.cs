@@ -14,25 +14,34 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] POSController pOSController;
     
     CameraController cameraController;
-    public GameObject tableTouched; 
+    CustomerDialogue customerDialogue;
+    public TableController tableTouched; 
 
     bool isTouchingPOS = false;
     
     private void Awake()
     {
         cameraController = FindObjectOfType<CameraController>();
+        customerDialogue = FindObjectOfType<CustomerDialogue>();
     }
     void Start()
     {
        playerInput = GetComponent<PlayerInput>();
+       
     }
 
     void OnInteract(InputValue value)
     {
-        if(value != null && tableTouched != null)
+        if(value != null && tableTouched != null && tableTouched.hasCustomersSeated)
         {
             orderingCanvas.SetActive(true);
             serverNotes.OpenTableNotes(tableTouched);
+            
+            //start customer dialogue at Seat 1
+            customerDialogue.currentCustomerIndex = 0;
+            customerDialogue.GenerateOrderDialogue(tableTouched.GetOrderBySeatNumber(0));
+            customerDialogue.StartTypewriterCoroutine(customerDialogue.GetOrderText());
+            //StartCoroutine(customerDialogue.TypewriteOrder(customerDialogue.GetOrderText()));
             cameraController.SwitchCameras();
             //cameraController.HardLookAtObject(tableTouched.GetComponent<TableController>().GetCustomerAtSeat(0));
             playerInput.SwitchCurrentActionMap("Taking Orders");
@@ -52,7 +61,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if(other.transform.tag == "Tables")
         {
-            tableTouched = other.gameObject;
+            tableTouched = other.GetComponent<TableController>();
             TableController tableControl = tableTouched.GetComponent<TableController>();
             cameraController.MoveHardLookCamera(tableTouched.transform);
             if(tableControl.hasCustomersSeated)
@@ -82,7 +91,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    public GameObject GetTableTouched()
+    public TableController GetTableTouched()
     {
         return tableTouched;
     }

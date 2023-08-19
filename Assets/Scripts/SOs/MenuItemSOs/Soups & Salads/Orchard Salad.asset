@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Orchard Salad
   description: Romaine salad with sliced apples, raisins, vinaigrette
   baseCost: 12.99
-  taxCost: 0.13
-  ticketTimeSeconds: 30
+  taxRate: 0.01
+  ticketTimeSeconds: 0

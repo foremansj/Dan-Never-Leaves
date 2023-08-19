@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Shirts
   description: 
   baseCost: 15
-  taxCost: 0.15
+  taxRate: 0.01
   ticketTimeSeconds: 10

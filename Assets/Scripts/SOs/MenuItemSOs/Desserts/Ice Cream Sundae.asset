@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Ice Cream Sundae
   description: Ice cream sundae with chopped nuts and chocolate sauce
   baseCost: 10.99
-  taxCost: 0.11
-  ticketTimeSeconds: 20
+  taxRate: 0.01
+  ticketTimeSeconds: 0

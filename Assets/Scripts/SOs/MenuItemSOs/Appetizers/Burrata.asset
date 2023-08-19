@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Burrata
   description: Burrata cheese and crostini
   baseCost: 12.99
-  taxCost: 0.13
-  ticketTimeSeconds: 60
+  taxRate: 0.01
+  ticketTimeSeconds: 0

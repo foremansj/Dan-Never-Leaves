@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,17 +8,19 @@ public class TableController : MonoBehaviour
     [SerializeField] int maxCustomers;
     [SerializeField] int tableNumber;
     [SerializeField] List<GameObject> seats;
+    //public Dictionary<GameObject, String> customerOrders;
     public PartyController currentParty;
-    GameObject checkHolder;
-    GameObject orderHolder;
+    Dictionary<int, List<MenuItemSO>> ordersBySeatNumber = new Dictionary<int, List<MenuItemSO>>();
+    //GameObject checkHolder;
+    //GameObject orderHolder;
 
     public bool hasCustomersSeated;
     PartyController partyController;
 
     void Awake()
     {
-        checkHolder = this.transform.Find("Check Holder").gameObject;
-        orderHolder = this.transform.Find("Order Holder").gameObject;
+        //checkHolder = this.transform.Find("Check Holder").gameObject;
+        //orderHolder = this.transform.Find("Order Holder").gameObject;
     }
 
     void Start()
@@ -35,7 +38,7 @@ public class TableController : MonoBehaviour
         return maxCustomers;
     }
 
-    public GameObject GetCustomerAtSeat(int seatNumber)
+    public GameObject GetSeatAtSeatNumber(int seatNumber)
     {
         return seats[seatNumber];
     }
@@ -45,15 +48,10 @@ public class TableController : MonoBehaviour
         return tableNumber;
     }
 
-    public GameObject GetCheckHolder()
+    /*public GameObject GetCheckHolder()
     {
         return checkHolder;
-    }
-
-    public GameObject GetOrderHolder()
-    {
-        return orderHolder;
-    }
+    }*/
 
     public void SetActiveParty(PartyController party)
     {
@@ -63,5 +61,22 @@ public class TableController : MonoBehaviour
     public PartyController GetCurrentParty()
     {
         return currentParty;
+    }
+
+    public void AddOrderBySeatNumber(int seat, List<MenuItemSO> order)
+    {
+        ordersBySeatNumber.Add(seat, order);
+    }
+
+    public List<MenuItemSO> GetOrderBySeatNumber(int seat)
+    {
+        if(hasCustomersSeated)
+        {
+            return ordersBySeatNumber[seat];
+        }
+        else
+        {
+            return null;
+        }
     }
 }

@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: NA Beverage
   description: Non-alcoholic drink
   baseCost: 4
-  taxCost: 0.04
+  taxRate: 0.01
   ticketTimeSeconds: 10

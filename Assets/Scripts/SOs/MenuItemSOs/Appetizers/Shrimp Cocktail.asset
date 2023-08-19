@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Shrimp Cocktail
   description: Cold shrimp with tartar sauce
   baseCost: 9.99
-  taxCost: 0.1
-  ticketTimeSeconds: 40
+  taxRate: 0.01
+  ticketTimeSeconds: 0

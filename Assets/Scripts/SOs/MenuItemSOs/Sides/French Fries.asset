@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: French Fries
   description: French fries
   baseCost: 5.99
-  taxCost: 0.06
+  taxRate: 0.01
   ticketTimeSeconds: 30

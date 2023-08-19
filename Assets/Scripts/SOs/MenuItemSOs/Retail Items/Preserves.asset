@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Preserves
   description: 
   baseCost: 12
-  taxCost: 0.12
+  taxRate: 0.01
   ticketTimeSeconds: 10

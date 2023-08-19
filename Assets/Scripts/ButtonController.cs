@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class ButtonController : MonoBehaviour
     [SerializeField] GameObject dessertButtons;
     [SerializeField] GameObject kidsMenuButtons;
     [SerializeField] GameObject retailButtons;
+    POSController pOSController;
+
+    private void Awake()
+    {
+        pOSController = FindObjectOfType<POSController>();
+    }
 
     public void OpenAppetizers()
     {

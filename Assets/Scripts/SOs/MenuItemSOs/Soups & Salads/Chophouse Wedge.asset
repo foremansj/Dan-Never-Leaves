@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Chophouse Wedge
   description: Wedge salad
   baseCost: 12.99
-  taxCost: 0.13
-  ticketTimeSeconds: 20
+  taxRate: 0.01
+  ticketTimeSeconds: 0

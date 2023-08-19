@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Liquor
   description: Shot or mixed drink
   baseCost: 10
-  taxCost: 0.625
+  taxRate: 0.0625
   ticketTimeSeconds: 10

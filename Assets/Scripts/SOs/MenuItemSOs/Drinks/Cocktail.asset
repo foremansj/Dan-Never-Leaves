@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Cocktail
   description: Delicious mixed drink
   baseCost: 13
-  taxCost: 0.8125
+  taxRate: 0.0625
   ticketTimeSeconds: 20

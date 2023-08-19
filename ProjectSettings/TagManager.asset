@@ -21,8 +21,8 @@ TagManager:
   - POS
   - Bar
   - Kitchen
-  - 
-  - 
+  - Walls
+  - Doors
   - 
   - 
   - 
@@ -43,4 +43,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Doors
+    uniqueID: 2496284199
+    locked: 0
+  - name: Ground
+    uniqueID: 369971821
+    locked: 0
+  - name: Building
+    uniqueID: 2058017419
+    locked: 0
+  - name: Environment
+    uniqueID: 12364809
+    locked: 0
+  - name: NPCs
+    uniqueID: 3479007205
+    locked: 0
+  - name: Player
+    uniqueID: 1745854907
     locked: 0

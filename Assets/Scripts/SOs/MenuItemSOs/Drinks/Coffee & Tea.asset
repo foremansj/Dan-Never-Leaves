@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Coffee & Tea
   description: Hot coffee or tea
   baseCost: 5
-  taxCost: 0.05
-  ticketTimeSeconds: 25
+  taxRate: 0.01
+  ticketTimeSeconds: 15

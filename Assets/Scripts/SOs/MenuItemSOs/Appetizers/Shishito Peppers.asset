@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Shishito Peppers
   description: Blistered shishito peppers with chipotle sauce
   baseCost: 9.99
-  taxCost: 0.1
-  ticketTimeSeconds: 60
+  taxRate: 0.01
+  ticketTimeSeconds: 0

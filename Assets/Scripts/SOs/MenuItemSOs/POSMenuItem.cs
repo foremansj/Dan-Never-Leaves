@@ -12,7 +12,7 @@ public class POSMenuItem : MonoBehaviour
     public string itemDescription;
 
     public float itemPrice;
-    public float itemTax;
+    public float itemTaxRate;
     public float totalItemCost;
 
     public float ticketTime;
@@ -26,16 +26,15 @@ public class POSMenuItem : MonoBehaviour
         itemDescription = menuItemSO.description;
 
         itemPrice = menuItemSO.baseCost;
-        itemTax = menuItemSO.taxCost;
-        totalItemCost = itemPrice + itemTax;
+        itemTaxRate = menuItemSO.taxRate;
+        totalItemCost = itemPrice + (itemPrice * itemTaxRate);
 
         ticketTime = menuItemSO.ticketTimeSeconds;
 
     }
 
-    // Update is called once per frame
-    void Update()
+    public MenuItemSO GetMenuItemSO()
     {
-        
+        return menuItemSO;
     }
 }

@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Herb Stuffed Mushrooms
   description: Mushroom caps stuffed with herbs, cheese, and bread crumbs
   baseCost: 12.99
-  taxCost: 0.13
-  ticketTimeSeconds: 60
+  taxRate: 0.01
+  ticketTimeSeconds: 0

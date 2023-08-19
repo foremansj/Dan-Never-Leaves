@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Kids Filet
   description: 
   baseCost: 19.99
-  taxCost: 0.2
-  ticketTimeSeconds: 40
+  taxRate: 0.01
+  ticketTimeSeconds: 0

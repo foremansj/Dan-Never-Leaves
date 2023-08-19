@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Charcuterie Board
   description: Assortment of meats, cheeses, fruits, vegetables, and sauces
   baseCost: 12.99
-  taxCost: 0.13
-  ticketTimeSeconds: 40
+  taxRate: 0.01
+  ticketTimeSeconds: 0

@@ -33,13 +33,12 @@ public class ServerNotes : MonoBehaviour
 
     private void Start()
     {
-        
-        //currentTableNotes = new Dictionary<string, int>();
+
     }
     
-    public void OpenTableNotes(GameObject table)
+    public void OpenTableNotes(TableController table)
     {
-        SetNotesTableNumber(table);
+        SetNotesTableNumber(table.gameObject);
         if (workingTableNotes.ContainsKey(table.name))
         {
             Debug.Log("Opening notes for this key " + table.name);
@@ -60,7 +59,7 @@ public class ServerNotes : MonoBehaviour
 
     public void SaveTableNotes()
     {
-        GameObject table = player.GetComponent<PlayerInteraction>().GetTableTouched();
+        TableController table = player.GetComponent<PlayerInteraction>().GetTableTouched();
         if(workingTableNotes.ContainsKey(table.name))
         {
             workingTableNotes[table.name] = serverNotesInputField.text;
@@ -82,11 +81,6 @@ public class ServerNotes : MonoBehaviour
         //rename the saved notes string to something indicating it is old
         //add a strikethrough to all the text to make it look crossed out
         //move the string so it does not come up when interacting with the table in the future
-    }
-
-    public void OpenNotesAtPOS()
-    {
-        
     }
 
     //when player hits ENTER, move cursor to a new line, and look at next customer

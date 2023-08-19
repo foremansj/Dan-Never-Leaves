@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Bone-in Ribeye
   description: Bone-in Chicago cut ribeye steak
   baseCost: 35.99
-  taxCost: 0.36
+  taxRate: 0.01
   ticketTimeSeconds: 60

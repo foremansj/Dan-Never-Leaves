@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Maine Lobster Tails
   description: Twin Maine lobster tails with metled butter
   baseCost: 45.99
-  taxCost: 0.46
+  taxRate: 0.01
   ticketTimeSeconds: 60

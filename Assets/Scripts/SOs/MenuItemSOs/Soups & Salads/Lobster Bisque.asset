@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Lobster Bisque
   description: Lobster bisque with crostini
   baseCost: 14.99
-  taxCost: 0.15
-  ticketTimeSeconds: 30
+  taxRate: 0.01
+  ticketTimeSeconds: 0

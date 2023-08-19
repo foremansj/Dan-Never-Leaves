@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Mac & Cheese
   description: Mac and cheese
   baseCost: 7.99
-  taxCost: 0.08
+  taxRate: 0.01
   ticketTimeSeconds: 30

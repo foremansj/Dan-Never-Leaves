@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Atlantic Salmon
   description: Pan seared salmon
   baseCost: 25.99
-  taxCost: 0.26
+  taxRate: 0.01
   ticketTimeSeconds: 60

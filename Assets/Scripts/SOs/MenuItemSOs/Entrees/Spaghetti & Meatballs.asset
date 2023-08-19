@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: Spaghetti & Meatballs
   description: Handmade spaghetti with homemade meatballs
   baseCost: 19.99
-  taxCost: 0.2
+  taxRate: 0.01
   ticketTimeSeconds: 60

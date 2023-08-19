@@ -16,5 +16,5 @@ MonoBehaviour:
   description: Orecchiette pasta with crumbled Italian sausage in a truffle cream
     cheese sauce
   baseCost: 25.99
-  taxCost: 0.26
+  taxRate: 0.01
   ticketTimeSeconds: 60

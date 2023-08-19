@@ -26,8 +26,8 @@ public class CustomerController : MonoBehaviour
     public MenuItemSO retailPurchase;
     public bool hasOrdered = false;
     public bool isChild = false;
-
-
+    public List<MenuItemSO> fullOrder;
+    CheckController checkController;
 
     void Awake()
     {
@@ -45,7 +45,7 @@ public class CustomerController : MonoBehaviour
         {
             isChild = true;
         }
-
+        
         GenerateOrder();
     }
 
@@ -83,41 +83,66 @@ public class CustomerController : MonoBehaviour
         }
     }
 
-    public void GenerateOrder()
+    private void GenerateOrder()
     {
         if(!hasOrdered && !isChild)
         {
             bool gettingAppetizer = Random.value > 0.5f;
             bool gettingDessert = Random.value > 0.5f;
+            
+            drink = menuDatabase.GetRandomDrink();
+            fullOrder.Add(drink);
             if(gettingAppetizer)
             {
                 firstCourse = menuDatabase.GetRandomAppetizer();
+                fullOrder.Add(firstCourse);
             }
-
             mainCourse = menuDatabase.GetRandomEntree();
-            drink = menuDatabase.GetRandomDrink();
-
+            fullOrder.Add(mainCourse);
+            
             if(gettingDessert)
             {
                 dessert = menuDatabase.GetRandomDessert();
+                fullOrder.Add(dessert);
             }
         }
         else if(!hasOrdered && isChild)
         {
-            mainCourse = menuDatabase.GetRandomKidsMenuItem();
             drink = menuDatabase.GetKidsDrink();
+            fullOrder.Add(drink);
+            mainCourse = menuDatabase.GetRandomKidsMenuItem();
+            fullOrder.Add(mainCourse);
+
+        }
+    }
+
+    public void AddOrderToCheck()
+    {
+        checkController = party.GetComponent<CheckController>();
+        foreach(MenuItemSO item in fullOrder)
+        {
+            checkController.CompileFullPartyOrder(item);
         }
     }
 
     
-    public void OrderFood()
+    /*public void OrderFood()
     {
-        
-    }
+        hasOrdered = true;
+        foreach(MenuItemSO item in fullOrder)
+        {
+            party.GetComponent<CheckController>().AddToCheck(item);
+        }
+    }*/
 
     void AdjustHappiness()
     {
 
+    }
+
+    public List<MenuItemSO> GetFullCustomerOrder()
+    {
+        return fullOrder;
     }
 
     public GameObject GetCustomerHead()
