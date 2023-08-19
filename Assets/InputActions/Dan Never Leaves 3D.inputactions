@@ -47,8 +47,8 @@
                     "id": "826303a1-5a51-4927-95c8-4f2e4b0987e3",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(pressPoint=0.2,behavior=2)",
-                    "initialStateCheck": true
+                    "interactions": "Hold",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -807,6 +807,74 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Taking Orders",
+            "id": "49f03be7-4e75-400b-9202-7990a1acab36",
+            "actions": [
+                {
+                    "name": "Escape Table",
+                    "type": "Button",
+                    "id": "aa793664-54e5-4015-a4dd-49d018d3164c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Next Order",
+                    "type": "Button",
+                    "id": "c34186c3-df6f-4303-8590-473fe87d2b6a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Enter Key",
+                    "type": "Button",
+                    "id": "dce8e989-6544-41a4-8d2a-3a53649e12d6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "82682e84-3afd-465b-a116-6beebe2db1bc",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape Table",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7de3d6f9-8ba3-4c0e-85ff-9b1dd1e5e2c5",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Next Order",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "49d71e55-b95d-4aac-9c05-0038b414d60e",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Enter Key",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
