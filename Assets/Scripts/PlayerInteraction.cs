@@ -23,6 +23,8 @@ public class PlayerInteraction : MonoBehaviour
 
     bool isTouchingPOS = false;
     bool isCarryingPlate = false;
+    bool isCarryingDirtyPlate = false;
+    bool isTouchingDishPit = false;
     int plateTableDestination;
     
     private void Awake()
@@ -40,7 +42,7 @@ public class PlayerInteraction : MonoBehaviour
     void OnInteract(InputValue value)
     {
         //get customer order and take notes
-        if(value != null && tableTouched != null && tableTouched.hasCustomersSeated && !isCarryingPlate)
+        if(value != null && tableTouched != null && tableTouched.hasCustomersSeated && !tableTouched.foodDropped &&!isCarryingPlate)
         {
             orderingCanvas.SetActive(true);
             serverNotes.OpenTableNotes(tableTouched);
@@ -75,6 +77,16 @@ public class PlayerInteraction : MonoBehaviour
         {
             PlaceFoodAtTable();
         }
+        //pick up plates from tables that are done eating
+        else if(value != null && !isCarryingPlate && tableTouched != null && !tableTouched.GetIsTableStillEating() && tableTouched.foodDropped)
+        {
+            PickUpDirtyPlates();
+        }
+
+        else if(value != null && isCarryingDirtyPlate && isTouchingDishPit)
+        {
+            PutDishesInWash();
+        }
         
         else
         {
@@ -89,19 +101,23 @@ public class PlayerInteraction : MonoBehaviour
             tableTouched = other.GetComponent<TableController>();
         }
 
-        if(other.transform.tag == "POS")
+        else if(other.transform.tag == "POS")
         {
             isTouchingPOS = true;
             cameraController.MoveHardLookCamera(gameObject.transform);
         }
         
-        if(other.transform.tag == "Kitchen Window")
+        else if(other.transform.tag == "Kitchen Window")
         {
             Debug.Log("Child count =" + other.transform.childCount);
             if(other.transform.childCount > 0)
             {
                 plateTouched = other.transform.GetChild(0).gameObject;
             }
+        }
+        else if(other.transform.tag == "Dish Pit")
+        {
+            isTouchingDishPit = true;
         }
     }
 
@@ -112,14 +128,19 @@ public class PlayerInteraction : MonoBehaviour
             tableTouched = null;
         }
         
-        if(other.transform.tag == "POS")
+        else if(other.transform.tag == "POS")
         {
             isTouchingPOS = false;
         }
 
-        if(other.transform.tag == "Kitchen Window")
+        else if(other.transform.tag == "Kitchen Window")
         {
             plateTouched = null;
+        }
+
+        else if(other.transform.tag == "Dish Pit")
+        {
+            isTouchingDishPit = false;
         }
     }
 
@@ -147,5 +168,20 @@ public class PlayerInteraction : MonoBehaviour
         armWithPlate.SetActive(false);
         plateTableDestination = 0;
         isCarryingPlate = false;
+    }
+
+    void PickUpDirtyPlates()
+    {
+        armWithPlate.SetActive(true);
+        armWithPlate.GetComponentInChildren<TextMeshProUGUI>().text = "Dirty";
+        isCarryingDirtyPlate = true;
+        tableTouched.RemovePlatesFromTable();
+        tableTouched.currentParty.isReadyToPay = true;
+    }
+
+    void PutDishesInWash()
+    {
+        armWithPlate.SetActive(false);
+        isCarryingDirtyPlate = false;
     }
 }

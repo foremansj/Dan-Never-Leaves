@@ -135,18 +135,19 @@ public class CustomerController : MonoBehaviour
 
     public IEnumerator EatFoodOnTable(GameObject food)
     {
-        
         Slider foodSlider = food.transform.gameObject.GetComponentInChildren<Slider>();
         foodSlider.minValue = 0f;
         foodSlider.maxValue = eatingDuration;
         isEating = true;
-        
+
         bool isLooping = true;
         while(isLooping)
         {
             foodSlider.value += Time.deltaTime;
             if(foodSlider.value >= eatingDuration)
             {
+                foodSlider.transform.Find("InnerBorder").GetComponent<Image>().color = new Color(0f, 0.5471698f, 0.02956277f);
+                foodSlider.transform.Find("OuterBorder").GetComponent<Image>().color = new Color(0f, 0.5471698f, 0.02956277f);
                 isLooping = false;
                 isEating = false;
                 yield return null;

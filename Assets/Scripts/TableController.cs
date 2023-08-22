@@ -16,6 +16,8 @@ public class TableController : MonoBehaviour
     Dictionary<int, List<MenuItemSO>> ordersBySeatNumber = new Dictionary<int, List<MenuItemSO>>();
 
     public bool hasCustomersSeated;
+    public bool foodDropped;
+    public bool finishedEating = false;
     //PartyController partyController;
 
     void Awake()
@@ -77,6 +79,8 @@ public class TableController : MonoBehaviour
 
     public void PlaceFoodForCustomers()
     {
+        finishedEating = false;
+        foodDropped = true;
         for(int i = 0; i < currentParty.GetPartySize(); i++)
         {
             Vector3 placeSetting = seats[i].transform.GetChild(0).transform.position;
@@ -94,5 +98,26 @@ public class TableController : MonoBehaviour
             //customerAtSeat.EatFoodOnTable(food);
             StartCoroutine(customerAtSeat.EatFoodOnTable(food));
         }
+    }
+
+    public void RemovePlatesFromTable()
+    {
+        for(int i = 0; i < currentParty.GetPartySize(); i++)
+        {
+            GameObject food = seats[i].transform.GetChild(1).gameObject;
+            Destroy(food);
+        }
+    }
+
+    public bool GetIsTableStillEating()
+    {
+        for(int i = 0; i < currentParty.partyCustomers.Count; i++)
+        {
+            if(currentParty.partyCustomers[i].GetComponent<CustomerController>().GetIsEating() == false)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

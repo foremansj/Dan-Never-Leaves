@@ -8,6 +8,7 @@ TagManager:
   - POS
   - Customer
   - Kitchen Window
+  - Dish Pit
   layers:
   - Default
   - TransparentFX

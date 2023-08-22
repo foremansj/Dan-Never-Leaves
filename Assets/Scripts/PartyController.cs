@@ -18,6 +18,8 @@ public class PartyController : MonoBehaviour
     HostStand hostStand;
     CheckController checkController;
 
+    public bool isReadyToPay = false;
+
     private void Awake()
     {
         hostStand = FindObjectOfType<HostStand>();
@@ -84,6 +86,21 @@ public class PartyController : MonoBehaviour
             customer.MoveToDestination(seat.transform);
         }
         checkController.ListOutOrder();
+        checkController.CalculateCheckTotal();
+    }
+
+    public void PayCheck()
+    {
+        //set a random tip percent; generate five random numbers and take the largest one
+        for(int i = 0; i < 5; i++)
+        {
+            float randomTip = Random.Range(.15f, .25f);
+            if(randomTip > checkController.tipPercent)
+            {
+                checkController.tipPercent = randomTip;
+            }
+        }
+        checkController.tipAmount = checkController.subtotal * checkController.tipPercent;
         checkController.CalculateCheckTotal();
     }
 }

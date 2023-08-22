@@ -264,4 +264,9 @@ public class POSController : MonoBehaviour
             mainToast.GetComponent<POSController>().activeCheck = activeCheck;
         }
     }
+
+    public void PrintCustomerCheck()
+    {
+        
+    }
 }

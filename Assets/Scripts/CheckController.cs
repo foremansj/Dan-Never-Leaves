@@ -88,11 +88,12 @@ public class CheckController : MonoBehaviour
 
     public void CalculateCheckTotal()
     {
-        checkTotal = 0;
+        subtotal = 0;
         foreach (KeyValuePair<MenuItemSO, int> pair in actualFullOrder)
         {
-            checkTotal += pair.Key.GetTotalCost() * pair.Value;
+            subtotal += pair.Key.GetTotalCost() * pair.Value;
         }
+        checkTotal = subtotal + tipAmount;
     }
 
     public void ListOutOrder()
