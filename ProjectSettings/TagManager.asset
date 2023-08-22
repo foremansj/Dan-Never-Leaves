@@ -7,6 +7,7 @@ TagManager:
   - Tables
   - POS
   - Customer
+  - Kitchen Window
   layers:
   - Default
   - TransparentFX

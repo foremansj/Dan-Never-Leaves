@@ -1,26 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TableController : MonoBehaviour
 {
     [SerializeField] int maxCustomers;
     [SerializeField] int tableNumber;
     [SerializeField] List<GameObject> seats;
-    //public Dictionary<GameObject, String> customerOrders;
+    [SerializeField] GameObject foodPrefab;
+
     public PartyController currentParty;
     Dictionary<int, List<MenuItemSO>> ordersBySeatNumber = new Dictionary<int, List<MenuItemSO>>();
-    //GameObject checkHolder;
-    //GameObject orderHolder;
 
     public bool hasCustomersSeated;
-    PartyController partyController;
+    //PartyController partyController;
 
     void Awake()
     {
-        //checkHolder = this.transform.Find("Check Holder").gameObject;
-        //orderHolder = this.transform.Find("Order Holder").gameObject;
+
     }
 
     void Start()
@@ -48,11 +48,6 @@ public class TableController : MonoBehaviour
         return tableNumber;
     }
 
-    /*public GameObject GetCheckHolder()
-    {
-        return checkHolder;
-    }*/
-
     public void SetActiveParty(PartyController party)
     {
         currentParty = party;
@@ -77,6 +72,27 @@ public class TableController : MonoBehaviour
         else
         {
             return null;
+        }
+    }
+
+    public void PlaceFoodForCustomers()
+    {
+        for(int i = 0; i < currentParty.GetPartySize(); i++)
+        {
+            Vector3 placeSetting = seats[i].transform.GetChild(0).transform.position;
+            GameObject food = Instantiate(foodPrefab, placeSetting, Quaternion.identity);
+            food.transform.parent = seats[i].transform;
+            food.transform.LookAt(seats[i].transform);
+            food.GetComponentInChildren<TextMeshProUGUI>().text = currentParty.partyCustomers[i].GetComponent<CustomerController>().mainCourse.itemName;
+            //start the customer eating clock and food fill
+            CustomerController customerAtSeat = currentParty.partyCustomers[i].GetComponent<CustomerController>();
+
+            food.transform.GetChild(0).GetChild(0).transform.gameObject.SetActive(true);
+            //food.transform.Find("Slider").transform.gameObject.SetActive(true);
+            //Slider foodSlider = food.GetComponentInChildren<Slider>();
+            //foodSlider.SetEnabled(true);
+            //customerAtSeat.EatFoodOnTable(food);
+            StartCoroutine(customerAtSeat.EatFoodOnTable(food));
         }
     }
 }

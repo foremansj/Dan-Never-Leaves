@@ -9,11 +9,11 @@ public class POSController : MonoBehaviour
 {
     [Header("UI Panels")]
     [SerializeField] GameObject backgroundPanel;
-    [SerializeField] GameObject loginScreenPanel;
+    //[SerializeField] GameObject loginScreenPanel;
     [SerializeField] GameObject receiptPanel;
     [SerializeField] GameObject menuPanel;
     [SerializeField] GameObject floorMapPanel;
-    [SerializeField] GameObject paymentPanel;
+    //[SerializeField] GameObject paymentPanel;
     [SerializeField] GameObject openNotesButton;
     [SerializeField] GameObject closeNotesButton;
     [SerializeField] GameObject toastWithNotes;
@@ -22,9 +22,7 @@ public class POSController : MonoBehaviour
     [SerializeField] GameObject mainNotes;
 
     [Header("Checks & Orders")]
-    [SerializeField] GameObject checkPrefab;
     [SerializeField] GameObject closedCheckHolder;
-    [SerializeField] GameObject orderPrefab;
     [SerializeField] TextMeshProUGUI itemNameText;
     [SerializeField] TextMeshProUGUI itemQTYText;
     [SerializeField] TextMeshProUGUI individualCostText;
@@ -40,13 +38,14 @@ public class POSController : MonoBehaviour
     [SerializeField] TextMeshProUGUI tipPercentText;
     [SerializeField] TextMeshProUGUI tipTotalText;
 
-    int receiptNumberCounter = 1;
+    int checkNumberCounter = 1;
 
     PlayerInput playerInput;
     PlayerInteraction playerInteraction;
     
     POSTableController posTableController;
     CameraController cameraController;
+    //KitchenWindowController kitchenWindowController;
     
     public TableController tableController;
     public CheckController activeCheck;
@@ -57,6 +56,7 @@ public class POSController : MonoBehaviour
         playerInput = FindObjectOfType<PlayerInput>();
         playerInteraction = FindObjectOfType<PlayerInteraction>();
         cameraController = FindObjectOfType<CameraController>();
+        //kitchenWindowController = FindObjectOfType<KitchenWindowController>();
     }
 
     void Start()
@@ -112,14 +112,14 @@ public class POSController : MonoBehaviour
 
     public void SetPOSNotepad()
     {
-        GameObject table = activeCheck.transform.parent.parent.gameObject;
+        int table = activeCheck.GetTableNumber();
         
         ServerNotes mainNotepad = mainNotes.GetComponent<ServerNotes>();
         ServerNotes toastNotepad = notesWithToast.GetComponent<ServerNotes>();
         toastNotepad.SetNotesTableNumber(table);
-        if(mainNotepad.workingTableNotes.ContainsKey(table.name))
+        if(mainNotepad.workingTableNotes.ContainsKey(table))
         {
-            notesWithToast.GetComponent<ServerNotes>().serverNotesInputField.text = mainNotepad.workingTableNotes[table.name];
+            notesWithToast.GetComponent<ServerNotes>().serverNotesInputField.text = mainNotepad.workingTableNotes[table];
         }
         else
         {
@@ -144,29 +144,22 @@ public class POSController : MonoBehaviour
         if(table.GetCurrentParty().GetComponent<CheckController>() != null)
         {
             activeCheck = table.GetCurrentParty().GetComponent<CheckController>();
-            if(activeCheck.playerEnteredOrder != null)
+            /*if(activeCheck.playerEnteredOrder != null)
             {
-                SwapDictionaries(activeCheck.tempPlayerEnteredOrder, activeCheck.playerEnteredOrder);
-            }
+                SwapDictionaries(activeCheck.currentKitchenTicket, activeCheck.playerEnteredOrder);
+            }*/
         }
-    }
-
-    private void SwapDictionaries(Dictionary<MenuItemSO, int> target, Dictionary<MenuItemSO, int> source)
-    {
-        target.Clear();
-        foreach (KeyValuePair<MenuItemSO, int> pair in source)
+        else
         {
-            target.Add(pair.Key, pair.Value);
-
+            return;
         }
     }
 
     public void AddItemToOrderWindow(MenuItemSO item)
     {
-        //adds item to ticket, player order, and the temp order (to compare with the player order when submitting)
-        //activeCheck.AddToOrderDictionary(activeCheck.GetKitchenTicket(), item);
-        //activeCheck.AddToOrderDictionary(activeCheck.GetPlayerEnteredOrder(), item);
-        activeCheck.AddToOrderDictionary(activeCheck.tempPlayerEnteredOrder, item);
+        //adds item to ticket and player entererd order
+        activeCheck.AddToOrderDictionary(activeCheck.currentKitchenTicket, item);
+        activeCheck.AddToOrderDictionary(activeCheck.playerEnteredOrder, item);
         SetOrderScreen();
     }
     
@@ -177,9 +170,9 @@ public class POSController : MonoBehaviour
         float taxTotal = 0;
         
         //if there is an active check, set the screen, if not, set the null screen
-        if(activeCheck.tempPlayerEnteredOrder != null)
+        if(activeCheck.playerEnteredOrder != null)
         {
-            foreach(KeyValuePair<MenuItemSO, int> pair in activeCheck.tempPlayerEnteredOrder)
+            foreach(KeyValuePair<MenuItemSO, int> pair in activeCheck.playerEnteredOrder)
             {
                 //setting the top of the check/order POS screen
                 itemNameText.text += pair.Key.itemName + "<br>";
@@ -227,16 +220,39 @@ public class POSController : MonoBehaviour
 
     public void SendChanges()
     {
-        SwapDictionaries(activeCheck.playerEnteredOrder, activeCheck.tempPlayerEnteredOrder);
-        //send kitchen ticket
+        //SwapDictionaries(activeCheck.playerEnteredOrder, activeCheck.currentKitchenTicket);
+        //AddToPlayerEnteredOrderDict();
+        activeCheck.SendToKitchen();
+        if(activeCheck.checkNumber == 0)
+        {
+            activeCheck.SetCheckNumber(checkNumberCounter);
+            checkNumberCounter++;
+        }
+        activeCheck.currentKitchenTicket.Clear();
     }
 
     public void CancelChanges()
     {
-        SwapDictionaries(activeCheck.tempPlayerEnteredOrder, activeCheck.playerEnteredOrder);
+        RemoveChangesFromOrderScreen();
+        activeCheck.currentKitchenTicket.Clear();
+        //SwapDictionaries(activeCheck.currentKitchenTicket, activeCheck.playerEnteredOrder);
     }
 
-    /*public void NormalizeToastScreens(CustomerCheck check)
+    public void RemoveChangesFromOrderScreen()
+    {
+        foreach(KeyValuePair<MenuItemSO, int> pair in activeCheck.currentKitchenTicket)
+        {
+            int oldValue;
+            activeCheck.playerEnteredOrder.TryGetValue(pair.Key, out oldValue);
+            activeCheck.playerEnteredOrder[pair.Key] = oldValue - pair.Value;
+            if(activeCheck.playerEnteredOrder[pair.Key] <= 0)
+            {
+                activeCheck.playerEnteredOrder.Remove(pair.Key);
+            }
+        }
+    }
+
+    public void NormalizeToastScreens()
     {
         if(gameObject == mainToast) //&& toastWithNotes.activeInHierarchy == false)
         {
@@ -247,5 +263,5 @@ public class POSController : MonoBehaviour
         {
             mainToast.GetComponent<POSController>().activeCheck = activeCheck;
         }
-    }*/
+    }
 }

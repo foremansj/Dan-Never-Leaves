@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Pan seared salmon
   baseCost: 25.99
   taxRate: 0.01
-  ticketTimeSeconds: 60
+  ticketTimeSeconds: 45

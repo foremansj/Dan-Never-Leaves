@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Vanilla bean custard and caramelized sugar
   baseCost: 12.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 15

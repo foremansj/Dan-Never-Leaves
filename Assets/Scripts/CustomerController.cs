@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+
+
 
 public class CustomerController : MonoBehaviour
 {
@@ -29,6 +31,10 @@ public class CustomerController : MonoBehaviour
     public List<MenuItemSO> fullOrder;
     CheckController checkController;
 
+    [SerializeField] float eatingDuration;
+    public float eatingSpeedModifier;
+    bool isEating;
+
     void Awake()
     {
         hostStand = FindObjectOfType<HostStand>();
@@ -45,6 +51,8 @@ public class CustomerController : MonoBehaviour
         {
             isChild = true;
         }
+
+        eatingDuration = Random.Range(35f, 55f);
         
         GenerateOrder();
     }
@@ -125,15 +133,33 @@ public class CustomerController : MonoBehaviour
         }
     }
 
-    
-    /*public void OrderFood()
+    public IEnumerator EatFoodOnTable(GameObject food)
     {
-        hasOrdered = true;
-        foreach(MenuItemSO item in fullOrder)
+        
+        Slider foodSlider = food.transform.gameObject.GetComponentInChildren<Slider>();
+        foodSlider.minValue = 0f;
+        foodSlider.maxValue = eatingDuration;
+        isEating = true;
+        
+        bool isLooping = true;
+        while(isLooping)
         {
-            party.GetComponent<CheckController>().AddToCheck(item);
+            foodSlider.value += Time.deltaTime;
+            if(foodSlider.value >= eatingDuration)
+            {
+                isLooping = false;
+                isEating = false;
+                yield return null;
+            }
+            yield return null;
         }
-    }*/
+    }
+
+    public bool GetIsEating()
+    {
+        return isEating;
+    }
+    
 
     void AdjustHappiness()
     {

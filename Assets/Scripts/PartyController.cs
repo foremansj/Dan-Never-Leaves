@@ -86,20 +86,4 @@ public class PartyController : MonoBehaviour
         checkController.ListOutOrder();
         checkController.CalculateCheckTotal();
     }
-    
-    /*public void AddItemToOrder(MenuItemSO item)
-    {
-        int itemCount;
-        if(partyOrderDictionary.ContainsKey(item))
-        {
-            partyOrderDictionary.TryGetValue(item, out itemCount);
-            partyOrderDictionary[item] = itemCount + 1;
-        }
-        else
-        {
-            partyOrderDictionary.Add(item, 1);
-        }
-    }*/
-
-    
 }

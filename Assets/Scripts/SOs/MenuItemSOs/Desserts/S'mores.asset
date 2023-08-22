@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Chocolate and marshmellow pie with graham cracker crust
   baseCost: 13.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 15

@@ -12,15 +12,22 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] GameObject orderingCanvas;
     [SerializeField] ServerNotes serverNotes;
     [SerializeField] POSController pOSController;
+    [SerializeField] GameObject armWithPlate;
+    public GameObject plateCarried;
     
     CameraController cameraController;
     CustomerDialogue customerDialogue;
+    KitchenWindowController kitchenWindowController;
     public TableController tableTouched; 
+    public GameObject plateTouched;
 
     bool isTouchingPOS = false;
+    bool isCarryingPlate = false;
+    int plateTableDestination;
     
     private void Awake()
     {
+        kitchenWindowController = FindObjectOfType<KitchenWindowController>();
         cameraController = FindObjectOfType<CameraController>();
         customerDialogue = FindObjectOfType<CustomerDialogue>();
     }
@@ -32,28 +39,46 @@ public class PlayerInteraction : MonoBehaviour
 
     void OnInteract(InputValue value)
     {
-        if(value != null && tableTouched != null && tableTouched.hasCustomersSeated)
+        //get customer order and take notes
+        if(value != null && tableTouched != null && tableTouched.hasCustomersSeated && !isCarryingPlate)
         {
             orderingCanvas.SetActive(true);
             serverNotes.OpenTableNotes(tableTouched);
+
+            cameraController.MoveHardLookCamera(tableTouched.transform);
+            GameObject customerHead = tableTouched.GetCurrentParty().partyCustomers[0].GetComponent<CustomerController>().GetCustomerHead();
+            cameraController.HardLookAtObject(customerHead);
             
             //start customer dialogue at Seat 1
             customerDialogue.currentCustomerIndex = 0;
             customerDialogue.GenerateOrderDialogue(tableTouched.GetOrderBySeatNumber(0));
             customerDialogue.StartTypewriterCoroutine(customerDialogue.GetOrderText());
-            //StartCoroutine(customerDialogue.TypewriteOrder(customerDialogue.GetOrderText()));
             cameraController.SwitchCameras();
-            //cameraController.HardLookAtObject(tableTouched.GetComponent<TableController>().GetCustomerAtSeat(0));
             playerInput.SwitchCurrentActionMap("Taking Orders");
         }
-
-        if(value != null && isTouchingPOS == true)
+        //interact with POS to place orders
+        else if(value != null && isTouchingPOS == true)
         {
             playerInput.SwitchCurrentActionMap("UI");
             cameraController.SwitchCameras();
             cameraController.HardLookAtObject(pOSController.gameObject);
             pOSController.enabled = true;
             pOSController.OpenFloorMap();
+        }
+        //pick up plate from kitchen window
+        else if(value != null && plateTouched != null && !isCarryingPlate)
+        {
+            PickUpFood(plateTouched);
+        }
+        //place food at table that ordered
+        else if(value != null && isCarryingPlate && tableTouched != null && tableTouched.GetTableNumber() == plateTableDestination)
+        {
+            PlaceFoodAtTable();
+        }
+        
+        else
+        {
+            return;
         }
     }
 
@@ -62,19 +87,21 @@ public class PlayerInteraction : MonoBehaviour
         if(other.transform.tag == "Tables")
         {
             tableTouched = other.GetComponent<TableController>();
-            TableController tableControl = tableTouched.GetComponent<TableController>();
-            cameraController.MoveHardLookCamera(tableTouched.transform);
-            if(tableControl.hasCustomersSeated)
-            {
-                GameObject customerHead = tableControl.GetCurrentParty().partyCustomers[0].GetComponent<CustomerController>().GetCustomerHead();
-                cameraController.HardLookAtObject(customerHead);
-            }
         }
 
         if(other.transform.tag == "POS")
         {
             isTouchingPOS = true;
             cameraController.MoveHardLookCamera(gameObject.transform);
+        }
+        
+        if(other.transform.tag == "Kitchen Window")
+        {
+            Debug.Log("Child count =" + other.transform.childCount);
+            if(other.transform.childCount > 0)
+            {
+                plateTouched = other.transform.GetChild(0).gameObject;
+            }
         }
     }
 
@@ -89,10 +116,36 @@ public class PlayerInteraction : MonoBehaviour
         {
             isTouchingPOS = false;
         }
+
+        if(other.transform.tag == "Kitchen Window")
+        {
+            plateTouched = null;
+        }
     }
 
     public TableController GetTableTouched()
     {
         return tableTouched;
+    }
+
+    void PickUpFood(GameObject obj)
+    {
+        armWithPlate.SetActive(true);
+        armWithPlate.GetComponentInChildren<TextMeshProUGUI>().text = obj.GetComponentInChildren<TextMeshProUGUI>().text;
+        kitchenWindowController.ReopenWindowSlot(plateTouched.transform.parent.gameObject);
+        isCarryingPlate = true;
+        plateTableDestination = int.Parse(plateTouched.name);
+        plateTouched = null;
+        //plateCarried = plateTouched;
+        //plateCarried.transform.position = armWithPlate.transform.GetChild(0).position;
+        //plateCarried.transform.SetParent(armWithPlate.transform);
+    }
+
+    void PlaceFoodAtTable()
+    {
+        tableTouched.PlaceFoodForCustomers();
+        armWithPlate.SetActive(false);
+        plateTableDestination = 0;
+        isCarryingPlate = false;
     }
 }

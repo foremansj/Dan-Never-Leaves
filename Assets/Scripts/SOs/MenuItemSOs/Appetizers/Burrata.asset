@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Burrata cheese and crostini
   baseCost: 12.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 15

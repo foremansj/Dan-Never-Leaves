@@ -55,11 +55,11 @@ public class HostStand : MonoBehaviour
                         party.GetComponent<CheckController>().tableNumber = table.GetTableNumber();
                         yield return new WaitForSeconds(seatingDelay);
                     }
-                    
+                
                     else
                     {
                         SendPartyToWaitingArea(party);
-                        yield return null;
+                        yield return new WaitForSeconds(seatingDelay / 2);
                     }
                 }
             }

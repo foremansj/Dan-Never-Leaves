@@ -16,4 +16,4 @@ MonoBehaviour:
   description: French onion soup with crostini
   baseCost: 9.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 20
