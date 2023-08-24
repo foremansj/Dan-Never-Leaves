@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class POSController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class POSController : MonoBehaviour
 
     [Header("Checks & Orders")]
     [SerializeField] GameObject closedCheckHolder;
+    [SerializeField] GameObject checkPresenterPrefab;
     [SerializeField] TextMeshProUGUI itemNameText;
     [SerializeField] TextMeshProUGUI itemQTYText;
     [SerializeField] TextMeshProUGUI individualCostText;
@@ -38,12 +40,12 @@ public class POSController : MonoBehaviour
     [SerializeField] TextMeshProUGUI tipPercentText;
     [SerializeField] TextMeshProUGUI tipTotalText;
 
+    [SerializeField] GameObject player;
+
     int checkNumberCounter = 1;
 
     PlayerInput playerInput;
-    PlayerInteraction playerInteraction;
     
-    POSTableController posTableController;
     CameraController cameraController;
     //KitchenWindowController kitchenWindowController;
     
@@ -54,16 +56,9 @@ public class POSController : MonoBehaviour
     void Awake()
     {
         playerInput = FindObjectOfType<PlayerInput>();
-        playerInteraction = FindObjectOfType<PlayerInteraction>();
         cameraController = FindObjectOfType<CameraController>();
         //kitchenWindowController = FindObjectOfType<KitchenWindowController>();
     }
-
-    void Start()
-    {
-        posTableController = GetComponent<POSTableController>();
-    }
-    
     
     public void OpenFloorMap()
     {
@@ -84,8 +79,6 @@ public class POSController : MonoBehaviour
 
     public void EscapePOS()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.lockState = CursorLockMode.None;
         floorMapPanel.SetActive(false);
         receiptPanel.SetActive(false);
         menuPanel.SetActive(false);
@@ -116,7 +109,7 @@ public class POSController : MonoBehaviour
         
         ServerNotes mainNotepad = mainNotes.GetComponent<ServerNotes>();
         ServerNotes toastNotepad = notesWithToast.GetComponent<ServerNotes>();
-        toastNotepad.SetNotesTableNumber(table);
+        toastNotepad.notesTableHeaderText.text = "Table #" + table;
         if(mainNotepad.workingTableNotes.ContainsKey(table))
         {
             notesWithToast.GetComponent<ServerNotes>().serverNotesInputField.text = mainNotepad.workingTableNotes[table];
@@ -265,8 +258,38 @@ public class POSController : MonoBehaviour
         }
     }
 
-    public void PrintCustomerCheck()
+    public void PrintCustomerCheck() //print customer check and hopefully write the correct bill on it based on what player entered in POS
     {
+        if(activeCheck.playerEnteredOrder != null)
+        {
+            activeCheck.CalculateCheckTotals();
+            player.gameObject.transform.Find("Arm With Check").gameObject.SetActive(true);
+            GameObject checkArm = player.gameObject.transform.Find("Arm With Check").gameObject;
+            GameObject newCheck = Instantiate(checkPresenterPrefab, Vector3.zero, Quaternion.identity);
+            //GameObject checkLocation = checkArm.transform.GetChild(0).gameObject;
+            newCheck.transform.parent = player.gameObject.transform.Find("Arm With Check").gameObject.transform;
+            newCheck.transform.position = checkArm.transform.GetChild(0).gameObject.transform.position;
+            newCheck.transform.rotation = checkArm.transform.GetChild(0).gameObject.transform.rotation;
+            newCheck.transform.localScale = checkArm.transform.GetChild(0).gameObject.transform.localScale;
+            TextMeshProUGUI checkText = newCheck.GetComponentInChildren<TextMeshProUGUI>();
+            
+            //checkText.alignment = TextAlignmentOptions.Center;
+            //checkText.alignment = TextAlignmentOptions.Top;
+            checkText.text = "Table #" + activeCheck.tableNumber + "<br>";
+            //<align= "center">"Table #" + activeCheck.tableNumber + "<br>";
+            checkText.text += "Check #" + activeCheck.checkNumber + "<br>";
+
+            foreach(KeyValuePair<MenuItemSO, int> pair in activeCheck.playerEnteredOrder)
+            {
+                checkText.text += pair.Key.itemName + string.Format("{0:C}", pair.Key.baseCost * pair.Value) + "<br>"; 
+            }
+
+            checkText.text += "Subtotal: " + string.Format("{0:C}", activeCheck.subtotal) + "<br>";
+            checkText.text += "Taxes: " + string.Format("{0:C}", activeCheck.taxTotal) + "<br>";
+            checkText.text += "Tip: " + "<br>";
+            checkText.text += "Total: " + string.Format("{0:C}", activeCheck.subtotal + activeCheck.taxTotal);
+            player.GetComponent<PlayerInteraction>().isCarryingCheck = true;
+        }
         
     }
 }

@@ -86,14 +86,14 @@ public class CheckController : MonoBehaviour
         StartCoroutine(kitchenWindowController.StartCookingTicket(tableNumber, currentKitchenTicket, ticketTime));
     }
 
-    public void CalculateCheckTotal()
+    public void CalculateCheckTotals()
     {
-        subtotal = 0;
-        foreach (KeyValuePair<MenuItemSO, int> pair in actualFullOrder)
+        foreach (KeyValuePair<MenuItemSO, int> pair in playerEnteredOrder)
         {
+            taxTotal += pair.Key.taxRate * pair.Key.baseCost * pair.Value;
             subtotal += pair.Key.GetTotalCost() * pair.Value;
         }
-        checkTotal = subtotal + tipAmount;
+        checkTotal = subtotal + taxTotal + tipAmount;
     }
 
     public void ListOutOrder()
@@ -111,5 +111,10 @@ public class CheckController : MonoBehaviour
     public void SetCheckNumber(int number)
     {
         checkNumber = number;
+    }
+
+    public void CloseCheck()
+    {
+        
     }
 }

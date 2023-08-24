@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2272017378069914317}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Place Setting
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,37 +31,6 @@ Transform:
   m_Father: {fileID: 6652917685306631126}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1954859355999858897
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2824833569177357489}
-  m_Layer: 0
-  m_Name: Check Holder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2824833569177357489
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1954859355999858897}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5779484666753041161}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1992258357540439601
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,9 +40,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8081023030694883730}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Place Setting
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,9 +71,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1116908156275885617}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Seat 1
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134,9 +103,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 835801158398415188}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Place Setting
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -165,9 +134,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 533772656893985608}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Place Setting
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -196,9 +165,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6640830114317630605}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Seat 6
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -228,9 +197,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8348301617866712197}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Place Setting
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -259,9 +228,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5611437251453280178}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Place Setting
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -290,9 +259,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 367437707684418244}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Seat 5
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -325,17 +294,16 @@ GameObject:
   - component: {fileID: 9136902249632201658}
   - component: {fileID: 4858731597886818580}
   - component: {fileID: 1478242461406769894}
-  - component: {fileID: 3310788251612196689}
   - component: {fileID: 2263645440204776556}
   - component: {fileID: 564257507163314397}
   - component: {fileID: 4848222538461769503}
   - component: {fileID: 2294625567351450394}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: 6 Top
   m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &5779484666753041161
 Transform:
@@ -355,7 +323,6 @@ Transform:
   - {fileID: 119900942525203896}
   - {fileID: 367437707684418244}
   - {fileID: 6640830114317630605}
-  - {fileID: 2824833569177357489}
   - {fileID: 5149518562928303296}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -431,27 +398,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &3310788251612196689
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8297664701030200171}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.2, y: 1.2, z: 1.2}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2263645440204776556
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -492,7 +438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCustomers: 6
-  tableNumber: 15
+  tableNumber: 42
   seats:
   - {fileID: 3124946979941495717}
   - {fileID: 9090985703087740783}
@@ -503,6 +449,8 @@ MonoBehaviour:
   foodPrefab: {fileID: 5969748797086783546, guid: 2ad8059e49bb10346b91f4eebceb002f, type: 3}
   currentParty: {fileID: 0}
   hasCustomersSeated: 0
+  foodDropped: 0
+  finishedEating: 0
 --- !u!114 &4848222538461769503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,9 +495,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 119900942525203896}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Seat 4
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -579,9 +527,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6652917685306631126}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Seat 3
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -611,9 +559,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1947891140581861600}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Seat 2
-  m_TagString: Untagged
+  m_TagString: Tables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -646,6 +594,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Candle Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 468962040659837340, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 468962040659837340, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
+      propertyPath: m_TagString
+      value: Tables
+      objectReference: {fileID: 0}
     - target: {fileID: 5121795610519265337, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -668,7 +624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5121795610519265337, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.6
+      value: 0.62
       objectReference: {fileID: 0}
     - target: {fileID: 5121795610519265337, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
       propertyPath: m_LocalPosition.z
@@ -701,6 +657,14 @@ PrefabInstance:
     - target: {fileID: 5121795610519265337, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6057096377604622056, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6057096377604622056, guid: 785a846da490d2e4a8d05338fd60f061, type: 3}
+      propertyPath: m_TagString
+      value: Tables
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

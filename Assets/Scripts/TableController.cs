@@ -16,8 +16,9 @@ public class TableController : MonoBehaviour
     Dictionary<int, List<MenuItemSO>> ordersBySeatNumber = new Dictionary<int, List<MenuItemSO>>();
 
     public bool hasCustomersSeated;
-    public bool foodDropped;
-    public bool finishedEating = false;
+    public bool isFoodDropped;
+    public bool isFinishedEating = false;
+    public bool isCheckDropped;
     //PartyController partyController;
 
     void Awake()
@@ -79,8 +80,8 @@ public class TableController : MonoBehaviour
 
     public void PlaceFoodForCustomers()
     {
-        finishedEating = false;
-        foodDropped = true;
+        isFinishedEating = false;
+        isFoodDropped = true;
         for(int i = 0; i < currentParty.GetPartySize(); i++)
         {
             Vector3 placeSetting = seats[i].transform.GetChild(0).transform.position;

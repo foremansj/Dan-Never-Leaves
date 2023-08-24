@@ -18,6 +18,7 @@ public class ServerNotes : MonoBehaviour
     public Dictionary<int, string> workingTableNotes;
     public Dictionary<int, string> oldTableNotes;
     public Dictionary<int, string> allTableNotes;
+    int activeTableNumber; 
    
     CustomerController customerController;
     CameraController cameraController;
@@ -31,14 +32,10 @@ public class ServerNotes : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-
-    }
-    
     public void OpenTableNotes(TableController table)
     {
-        SetNotesTableNumber(table.GetTableNumber());
+        activeTableNumber = table.GetTableNumber();
+        notesTableHeaderText.text = "Table #" + activeTableNumber;
         if (workingTableNotes.ContainsKey(table.GetTableNumber()))
         {
             serverNotesInputField.text = workingTableNotes[table.GetTableNumber()];
@@ -46,17 +43,18 @@ public class ServerNotes : MonoBehaviour
 
         else
         {
+            workingTableNotes.Add(activeTableNumber, "");
             serverNotesInputField.text = "";
         }
     }
 
-    public void SetNotesTableNumber(int tableNumber)
+    /*public void SetNotesTableNumber(int tableNumber)
     {
         //string tableNumberOnly = Regex.Replace(table.name, "[^0-9]", "");
         notesTableHeaderText.text = "Table #" + tableNumber;
-    }
+    }*/
 
-    public void SaveTableNotes()
+    /*public void OLDSaveTableNotes()
     {
         int tableNumber = player.GetComponent<PlayerInteraction>().GetTableTouched().GetTableNumber();
         if(workingTableNotes.ContainsKey(tableNumber))
@@ -68,6 +66,10 @@ public class ServerNotes : MonoBehaviour
         {
             workingTableNotes.Add(tableNumber, serverNotesInputField.text);
         }
+    }*/
+    public void SaveTableNotes()
+    {
+        workingTableNotes[activeTableNumber] = serverNotesInputField.text;
     }
 
     public void CloseTableNotes()

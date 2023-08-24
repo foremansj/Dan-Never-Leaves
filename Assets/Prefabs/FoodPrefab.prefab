@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1358568577306754514}
   - component: {fileID: 9203561998895892643}
   - component: {fileID: 6499464169894630467}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: OuterBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4537886640066741387}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 6352965641818055930}
   - component: {fileID: 3003777392017471171}
   - component: {fileID: 1803716776221971830}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: InnerBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 5210235786838705713}
   - component: {fileID: 8631304612114005408}
   - component: {fileID: 5250885480495161953}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,9 +336,9 @@ GameObject:
   - component: {fileID: 6325783022774475980}
   - component: {fileID: 3196520957452591772}
   - component: {fileID: 3478145677366564779}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: FoodPrefab
-  m_TagString: Untagged
+  m_TagString: Plates
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 5292603062661812424}
   - component: {fileID: 4573697237284852720}
   - component: {fileID: 8322006983882205109}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Plate Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -516,7 +516,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9202998227687996947}
   - component: {fileID: 453710878213290229}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: ProgressSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -608,7 +608,7 @@ GameObject:
   - component: {fileID: 7323652066013864218}
   - component: {fileID: 2629574409189060559}
   - component: {fileID: 3562029696319218154}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -69,7 +69,7 @@ public class CustomerDialogue : MonoBehaviour
     public void MoveToNextCustomer()
     {
         StopCoroutine(dialogueCoroutine);
-        tableController = player.GetComponent<PlayerInteraction>().tableTouched;
+        tableController = player.GetComponent<PlayerInteraction>().lastTableTouched;
         List<GameObject> seatedCustomers;
         if(tableController != null)
         {
