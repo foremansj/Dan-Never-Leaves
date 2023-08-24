@@ -83284,7 +83284,11 @@ MonoBehaviour:
   timeText: {fileID: 1908205880}
   totalSalesText: {fileID: 1118437912}
   totalTipsText: {fileID: 1106846630}
-  totalTipsPercentText: {fileID: 0}
+  totalTipsPercentText: {fileID: 1578559589}
+  totalSalesAmount: 0
+  totalTipsAmount: 0
+  totalTipsPercentAmount: 0
+  clockSpeed: 3
 --- !u!224 &8890614651630417727
 RectTransform:
   m_ObjectHideFlags: 0
