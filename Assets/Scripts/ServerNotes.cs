@@ -15,9 +15,10 @@ public class ServerNotes : MonoBehaviour
     [SerializeField] GameObject tablesideNotes;
     [SerializeField] GameObject notesWithToast;
 
-    public Dictionary<string, string> workingTableNotes;
-    public Dictionary<string, string> oldTableNotes;
-    public Dictionary<string, string> allTableNotes;
+    public Dictionary<int, string> workingTableNotes;
+    public Dictionary<int, string> oldTableNotes;
+    public Dictionary<int, string> allTableNotes;
+    int activeTableNumber; 
    
     CustomerController customerController;
     CameraController cameraController;
@@ -25,51 +26,55 @@ public class ServerNotes : MonoBehaviour
     private void Awake()
     {
         cameraController = FindObjectOfType<CameraController>();
-        workingTableNotes = new Dictionary<string, string>();
-        oldTableNotes = new Dictionary<string, string>();
-        allTableNotes = new Dictionary<string, string>();
+        workingTableNotes = new Dictionary<int, string>();
+        oldTableNotes = new Dictionary<int, string>();
+        allTableNotes = new Dictionary<int, string>();
         gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-
-    }
-    
     public void OpenTableNotes(TableController table)
     {
-        SetNotesTableNumber(table.gameObject);
-        if (workingTableNotes.ContainsKey(table.name))
+        activeTableNumber = table.GetTableNumber();
+        notesTableHeaderText.text = "Table #" + activeTableNumber;
+        if (workingTableNotes.ContainsKey(table.GetTableNumber()))
         {
-            Debug.Log("Opening notes for this key " + table.name);
-            serverNotesInputField.text = workingTableNotes[table.name];
+            serverNotesInputField.text = workingTableNotes[table.GetTableNumber()];
         }
 
         else
         {
+            workingTableNotes.Add(activeTableNumber, "");
             serverNotesInputField.text = "";
         }
     }
 
-    public void SetNotesTableNumber(GameObject table)
+    /*public void SetNotesTableNumber(int tableNumber)
     {
-        string tableNumberOnly = Regex.Replace(table.name, "[^0-9]", "");
-        notesTableHeaderText.text = "Table #" + tableNumberOnly;
-    }
+        //string tableNumberOnly = Regex.Replace(table.name, "[^0-9]", "");
+        notesTableHeaderText.text = "Table #" + tableNumber;
+    }*/
 
-    public void SaveTableNotes()
+    /*public void OLDSaveTableNotes()
     {
-        TableController table = player.GetComponent<PlayerInteraction>().GetTableTouched();
-        if(workingTableNotes.ContainsKey(table.name))
+        int tableNumber = player.GetComponent<PlayerInteraction>().GetTableTouched().GetTableNumber();
+        if(workingTableNotes.ContainsKey(tableNumber))
         {
-            workingTableNotes[table.name] = serverNotesInputField.text;
+            workingTableNotes[tableNumber] = serverNotesInputField.text;
         }
         
         else
         {
-            workingTableNotes.Add(table.name, serverNotesInputField.text);
+            workingTableNotes.Add(tableNumber, serverNotesInputField.text);
         }
+    }*/
+    public void SaveTableNotes()
+    {
+        workingTableNotes[activeTableNumber] = serverNotesInputField.text;
+    }
 
+    public void CloseTableNotes()
+    {
+        //this used to be part of SaveTableNotes
         serverNotesInputField.text = "";
         gameObject.SetActive(false);
         cameraController.SwitchCameras();

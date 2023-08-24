@@ -7,6 +7,9 @@ TagManager:
   - Tables
   - POS
   - Customer
+  - Kitchen Window
+  - Dish Pit
+  - Plates
   layers:
   - Default
   - TransparentFX
@@ -23,7 +26,7 @@ TagManager:
   - Kitchen
   - Walls
   - Doors
-  - 
+  - Plate
   - 
   - 
   - 

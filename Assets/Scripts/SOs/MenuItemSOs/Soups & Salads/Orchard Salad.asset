@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Romaine salad with sliced apples, raisins, vinaigrette
   baseCost: 12.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 15

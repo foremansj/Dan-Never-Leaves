@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Lightly breaded deep-fried Wisconsin cheese
   baseCost: 9.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 15

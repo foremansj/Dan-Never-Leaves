@@ -16,4 +16,4 @@ MonoBehaviour:
   description: 
   baseCost: 19.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 45

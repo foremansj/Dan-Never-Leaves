@@ -15,8 +15,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        Cursor.lockState = CursorLockMode.Confined;
-        
     }
 
     // Update is called once per frame
@@ -35,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
-
     }
     
     void HandleMovement()
@@ -44,20 +41,28 @@ public class PlayerMovement : MonoBehaviour
         float xSpeed = moveInput.x * walkSpeed * Time.deltaTime;
         float zSpeed = moveInput.y * walkSpeed * Time.deltaTime;
 
-        if(sprint.IsInProgress())
+        if(moveInput.magnitude > Mathf.Epsilon)
         {
-            //rb.AddRelativeForce(moveInput.x * walkSpeed * Time.deltaTime, 0, moveInput.y * walkSpeed * Time.deltaTime, ForceMode.Force); //Mathf.Sign() ??
-            rb.transform.Translate(xSpeed * sprintBoost, 0, zSpeed * sprintBoost);
-            //Debug.Log("Sprinting");
+            if(sprint.IsInProgress())
+            {
+                //rb.AddRelativeForce(moveInput.x * walkSpeed * Time.deltaTime, 0, moveInput.y * walkSpeed * Time.deltaTime, ForceMode.Force); //Mathf.Sign() ??
+                rb.transform.Translate(xSpeed * sprintBoost, 0, zSpeed * sprintBoost);
+                //Debug.Log("Sprinting");
+            }
+
+            else
+            {
+                //rb.AddRelativeForce(moveInput.x * walkSpeed * Time.deltaTime, 0, moveInput.y * walkSpeed * Time.deltaTime, ForceMode.Force);
+                rb.transform.Translate(xSpeed, 0, zSpeed);
+                //Debug.Log("NOT Sprinting");
+                //Debug.Log("Speed is" + Vector3.Magnitude(rb.velocity));
+            }
         }
 
         else
         {
-            //rb.AddRelativeForce(moveInput.x * walkSpeed * Time.deltaTime, 0, moveInput.y * walkSpeed * Time.deltaTime, ForceMode.Force);
-            rb.transform.Translate(xSpeed, 0, zSpeed);
-            //Debug.Log("NOT Sprinting");
-            //Debug.Log("Speed is" + Vector3.Magnitude(rb.velocity));
+            //rb.transform.Translate(0, 0, 0);
+            rb.velocity = Vector3.zero;
         }
-        
     }
 }

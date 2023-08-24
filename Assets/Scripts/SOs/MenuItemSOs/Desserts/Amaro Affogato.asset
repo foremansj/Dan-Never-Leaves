@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Amaro poured over french vanilla ice cream
   baseCost: 9.99
   taxRate: 0.01
-  ticketTimeSeconds: 0
+  ticketTimeSeconds: 15

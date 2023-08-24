@@ -5,7 +5,7 @@ using UnityEngine;
 public class CheckController : MonoBehaviour
 {
     public int tableNumber;
-    public int checkNumber;
+    public int checkNumber = 0;
 
     public List<string> itemNames = new List<string>();
     public List<int> itemQuantities = new List<int>();
@@ -15,7 +15,7 @@ public class CheckController : MonoBehaviour
 
     public Dictionary<MenuItemSO, int> actualFullOrder = new Dictionary<MenuItemSO, int>();
     public Dictionary<MenuItemSO, int> playerEnteredOrder = new Dictionary<MenuItemSO, int>();
-    public Dictionary<MenuItemSO, int> tempPlayerEnteredOrder = new Dictionary<MenuItemSO, int>();
+    public Dictionary<MenuItemSO, int> currentKitchenTicket = new Dictionary<MenuItemSO, int>();
 
     public float taxTotal;
     public float subtotal;
@@ -80,19 +80,20 @@ public class CheckController : MonoBehaviour
         }
     }
 
-    public void SendToKitchen(Dictionary<MenuItemSO, int> ticket)
+    public void SendToKitchen()
     {
-        float ticketTime = kitchenWindowController.SetTicketTime(ticket);
-        StartCoroutine(kitchenWindowController.StartCookingTicket(ticket, ticketTime));
+        float ticketTime = kitchenWindowController.SetTicketTime(currentKitchenTicket);
+        StartCoroutine(kitchenWindowController.StartCookingTicket(tableNumber, currentKitchenTicket, ticketTime));
     }
 
-    public void CalculateCheckTotal()
+    public void CalculateCheckTotals()
     {
-        checkTotal = 0;
-        foreach (KeyValuePair<MenuItemSO, int> pair in actualFullOrder)
+        foreach (KeyValuePair<MenuItemSO, int> pair in playerEnteredOrder)
         {
-            checkTotal += pair.Key.GetTotalCost() * pair.Value;
+            taxTotal += pair.Key.taxRate * pair.Key.baseCost * pair.Value;
+            subtotal += pair.Key.GetTotalCost() * pair.Value;
         }
+        checkTotal = subtotal + taxTotal + tipAmount;
     }
 
     public void ListOutOrder()
@@ -105,5 +106,15 @@ public class CheckController : MonoBehaviour
             itemBaseCosts.Add(pair.Key.baseCost);
             individualItemTotals.Add(pair.Key.GetTotalCost());
         }
+    }
+
+    public void SetCheckNumber(int number)
+    {
+        checkNumber = number;
+    }
+
+    public void CloseCheck()
+    {
+        
     }
 }

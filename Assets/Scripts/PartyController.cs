@@ -18,6 +18,10 @@ public class PartyController : MonoBehaviour
     HostStand hostStand;
     CheckController checkController;
 
+    public float paymentDelay;
+    public bool isReadyToPay = false;
+    public bool isPayingCheck = false;
+
     private void Awake()
     {
         hostStand = FindObjectOfType<HostStand>();
@@ -84,22 +88,22 @@ public class PartyController : MonoBehaviour
             customer.MoveToDestination(seat.transform);
         }
         checkController.ListOutOrder();
-        checkController.CalculateCheckTotal();
+        checkController.CalculateCheckTotals();
     }
-    
-    /*public void AddItemToOrder(MenuItemSO item)
-    {
-        int itemCount;
-        if(partyOrderDictionary.ContainsKey(item))
-        {
-            partyOrderDictionary.TryGetValue(item, out itemCount);
-            partyOrderDictionary[item] = itemCount + 1;
-        }
-        else
-        {
-            partyOrderDictionary.Add(item, 1);
-        }
-    }*/
 
-    
+    public IEnumerator PayCheck()
+    {
+        paymentDelay = Random.Range(5f, 15f);
+        for(int i = 0; i < 5; i++)
+        {
+            float randomTip = Random.Range(.15f, .25f);
+            if(randomTip > checkController.tipPercent)
+            {
+                checkController.tipPercent = randomTip;
+            }
+        }
+        checkController.tipAmount = checkController.subtotal * checkController.tipPercent;
+        checkController.CalculateCheckTotals();
+        yield return new WaitForSeconds(paymentDelay * Time.deltaTime);
+    }
 }
