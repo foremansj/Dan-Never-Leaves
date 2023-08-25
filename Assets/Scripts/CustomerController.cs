@@ -33,7 +33,10 @@ public class CustomerController : MonoBehaviour
 
     [SerializeField] float eatingDuration;
     public float eatingSpeedModifier;
-    bool isEating;
+    public bool isEating;
+    public bool isDoneEating;
+    public bool reachedExit;
+    public bool isLeaving;
 
     void Awake()
     {
@@ -59,7 +62,16 @@ public class CustomerController : MonoBehaviour
 
     void Update()
     {
-        partyTable = party.tableDestination;
+        partyTable = party.assignedTable;
+        if(reachedExit && isLeaving)
+        {
+            Destroy(party.gameObject,2f);
+            Destroy(gameObject, 2f);
+        }
+        if(isLeaving)
+        {
+            MoveToDestination(FindObjectOfType<PartySpawner>().exitPoint.transform);
+        }
     }
 
     public void MoveToDestination(Transform transform)
@@ -77,17 +89,23 @@ public class CustomerController : MonoBehaviour
     {
         if(partyTable != null)
         {
-            if(other.gameObject == party.tableDestination.gameObject)
+            if(other.gameObject == party.assignedTable.gameObject)
             {
                 thisAgent.enabled = false;
                 thisObstacle.enabled = true;
-                transform.LookAt(party.tableDestination.transform);
+                transform.LookAt(party.assignedTable.transform);
                 thisRigidbody.constraints = RigidbodyConstraints.FreezePosition;
                 thisRigidbody.isKinematic = true;
                 gameObject.transform.position = customerSeat.transform.position;
                 isSeated = true;
                 other.GetComponent<TableController>().hasCustomersSeated = true;
+                party.CheckIfFullPartyHasSat();
             }
+        }
+
+        if(other.tag == "Exit" && isLeaving)
+        {
+            reachedExit = true;
         }
     }
 
@@ -154,13 +172,17 @@ public class CustomerController : MonoBehaviour
             }
             yield return null;
         }
+        isDoneEating = true;
+        if(partyTable.CheckIfTableIsDoneEating())
+        {
+            partyTable.isReadyToBus = true;
+        }
     }
 
-    public bool GetIsEating()
+    /*public bool GetIsEating()
     {
         return isEating;
-    }
-    
+    }*/
 
     void AdjustHappiness()
     {
@@ -175,5 +197,17 @@ public class CustomerController : MonoBehaviour
     public GameObject GetCustomerHead()
     {
         return customerHead;
+    }
+
+    public void SetHasOrdered()
+    {
+        hasOrdered = true;
+    }
+
+    public void LeaveRestaurant()
+    {
+        thisObstacle.enabled = false;
+        transform.position += new Vector3(0, 0.53f, 0);
+        thisAgent.enabled = true;
     }
 }

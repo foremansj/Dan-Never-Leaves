@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine.UI;
+using System;
 
 public class POSController : MonoBehaviour
 {
@@ -14,13 +15,14 @@ public class POSController : MonoBehaviour
     [SerializeField] GameObject receiptPanel;
     [SerializeField] GameObject menuPanel;
     [SerializeField] GameObject floorMapPanel;
-    //[SerializeField] GameObject paymentPanel;
+    [SerializeField] GameObject paymentPanel;
     [SerializeField] GameObject openNotesButton;
     [SerializeField] GameObject closeNotesButton;
     [SerializeField] GameObject toastWithNotes;
     [SerializeField] GameObject notesWithToast;
     [SerializeField] GameObject mainToast;
     [SerializeField] GameObject mainNotes;
+    
 
     [Header("Checks & Orders")]
     [SerializeField] GameObject closedCheckHolder;
@@ -47,21 +49,21 @@ public class POSController : MonoBehaviour
     PlayerInput playerInput;
     
     CameraController cameraController;
-    //KitchenWindowController kitchenWindowController;
+    UIController uIController;
     
     public TableController tableController;
     public CheckController activeCheck;
-    //int activeTableNumber;
 
     void Awake()
     {
         playerInput = FindObjectOfType<PlayerInput>();
         cameraController = FindObjectOfType<CameraController>();
-        //kitchenWindowController = FindObjectOfType<KitchenWindowController>();
+        uIController = FindObjectOfType<UIController>();
     }
     
     public void OpenFloorMap()
     {
+        uIController.HideUI();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
         backgroundPanel.SetActive(true);
@@ -70,15 +72,24 @@ public class POSController : MonoBehaviour
 
     public void OpenMenuPanels()
     {
-        floorMapPanel.SetActive(false);
-        receiptPanel.SetActive(true);
-        menuPanel.SetActive(true);
-        SetOrderScreen();
-        openNotesButton.SetActive(true);
+        if(tableController.GetCurrentParty() != null)
+        {
+            floorMapPanel.SetActive(false);
+            receiptPanel.SetActive(true);
+            menuPanel.SetActive(true);
+            SetOrderScreen();
+            openNotesButton.SetActive(true);
+        }
+        else
+        {
+            Console.WriteLine("There are no customers at that table!");
+            return;
+        }
     }
 
     public void EscapePOS()
     {
+        uIController.UnhideUI();
         floorMapPanel.SetActive(false);
         receiptPanel.SetActive(false);
         menuPanel.SetActive(false);
@@ -134,13 +145,9 @@ public class POSController : MonoBehaviour
     public void SetActiveTable(TableController table)
     {
         tableController = table;
-        if(table.GetCurrentParty().GetComponent<CheckController>() != null)
+        if(table.GetCurrentParty() != null) //.GetComponent<CheckController>()
         {
             activeCheck = table.GetCurrentParty().GetComponent<CheckController>();
-            /*if(activeCheck.playerEnteredOrder != null)
-            {
-                SwapDictionaries(activeCheck.currentKitchenTicket, activeCheck.playerEnteredOrder);
-            }*/
         }
         else
         {
@@ -216,6 +223,7 @@ public class POSController : MonoBehaviour
         //SwapDictionaries(activeCheck.playerEnteredOrder, activeCheck.currentKitchenTicket);
         //AddToPlayerEnteredOrderDict();
         activeCheck.SendToKitchen();
+        activeCheck.partyController.assignedTable.isReadyToEat = true;
         if(activeCheck.checkNumber == 0)
         {
             activeCheck.SetCheckNumber(checkNumberCounter);
@@ -263,14 +271,14 @@ public class POSController : MonoBehaviour
         if(activeCheck.playerEnteredOrder != null)
         {
             activeCheck.CalculateCheckTotals();
-            player.gameObject.transform.Find("Arm With Check").gameObject.SetActive(true);
-            GameObject checkArm = player.gameObject.transform.Find("Arm With Check").gameObject;
+            GameObject playerCheckArm = player.GetComponent<PlayerInteraction>().GetCheckArmTransform();
+            playerCheckArm.SetActive(true);
             GameObject newCheck = Instantiate(checkPresenterPrefab, Vector3.zero, Quaternion.identity);
             //GameObject checkLocation = checkArm.transform.GetChild(0).gameObject;
-            newCheck.transform.parent = player.gameObject.transform.Find("Arm With Check").gameObject.transform;
-            newCheck.transform.position = checkArm.transform.GetChild(0).gameObject.transform.position;
-            newCheck.transform.rotation = checkArm.transform.GetChild(0).gameObject.transform.rotation;
-            newCheck.transform.localScale = checkArm.transform.GetChild(0).gameObject.transform.localScale;
+            newCheck.transform.parent = playerCheckArm.transform;
+            newCheck.transform.position = playerCheckArm.transform.GetChild(0).gameObject.transform.position;
+            newCheck.transform.rotation = playerCheckArm.transform.GetChild(0).gameObject.transform.rotation;
+            newCheck.transform.localScale = playerCheckArm.transform.GetChild(0).gameObject.transform.localScale;
             TextMeshProUGUI checkText = newCheck.GetComponentInChildren<TextMeshProUGUI>();
             
             //checkText.alignment = TextAlignmentOptions.Center;
@@ -289,7 +297,14 @@ public class POSController : MonoBehaviour
             checkText.text += "Tip: " + "<br>";
             checkText.text += "Total: " + string.Format("{0:C}", activeCheck.subtotal + activeCheck.taxTotal);
             player.GetComponent<PlayerInteraction>().isCarryingCheck = true;
+            player.GetComponent<PlayerInteraction>().checkInHand = activeCheck;
         }
         
+    }
+
+    public void PayCustomerCheck()
+    {
+        activeCheck.CloseCheck();
+        activeCheck.partyController.assignedTable.isReadyToTipAndLeave = true;
     }
 }

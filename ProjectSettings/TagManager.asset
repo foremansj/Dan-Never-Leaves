@@ -10,6 +10,7 @@ TagManager:
   - Kitchen Window
   - Dish Pit
   - Plates
+  - Exit
   layers:
   - Default
   - TransparentFX

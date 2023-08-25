@@ -8,7 +8,8 @@ public class PartySpawner : MonoBehaviour
     
     [Header("Customer Spawning")]
     [SerializeField] GameObject customerPrefab;
-    [SerializeField] Vector3 spawnPointOrigin;
+    [SerializeField] public Vector3 spawnPointOrigin;
+    [SerializeField] public GameObject exitPoint;
     public float customerSpawnDelay;
 
     [SerializeField] bool isOpenForBusiness = true;
@@ -53,27 +54,27 @@ public class PartySpawner : MonoBehaviour
         switch(Time.time)
         {
             case float n when (n <= 60):
-                customerSpawnDelay = 35f;
+                customerSpawnDelay = 45f;
                 //isOpenForBusiness = true;
                 break;
 
             case float n when (n > 60 && n <= 120):
-                customerSpawnDelay = 25f;
+                customerSpawnDelay = 55f;
                 //isOpenForBusiness = true;
                 break;
             
             case float n when (n > 120 && n <= 180):
-                customerSpawnDelay = 20f;
+                customerSpawnDelay = 45f;
                 //isOpenForBusiness = true;
                 break;
             
             case float n when (n > 180 && n <= 240):
-                customerSpawnDelay = 35f;
+                customerSpawnDelay = 50f;
                 //isOpenForBusiness = true;
                 break;
             
             case float n when (n > 240 && n <= 300):
-                customerSpawnDelay = 45f;
+                customerSpawnDelay = 55f;
                 //isOpenForBusiness = false;
                 break;
             

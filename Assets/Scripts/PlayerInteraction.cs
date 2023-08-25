@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
-using Cinemachine;
-using System;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -14,21 +12,23 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] ServerNotes serverNotes;
     [SerializeField] POSController pOSController;
     [SerializeField] GameObject armWithPlate;
+    [SerializeField] GameObject armForCheckPresenters;
     public GameObject plateCarried;
     
     CameraController cameraController;
     CustomerDialogue customerDialogue;
     KitchenWindowController kitchenWindowController;
-    TableController tableTouched; 
+    public TableController tableTouched; 
     public TableController lastTableTouched;
+    public CheckController checkInHand;
     public GameObject plateTouched;
 
     bool isCarryingPlate = false;
     bool isCarryingDirtyPlate = false;
-    int plateTableDestination;
+    public int plateTableDestination;
     public bool isCarryingCheck = false; 
     bool isInteractPressed;
-    bool isBusy;
+    public bool isBusy;
     
     private void Awake()
     {
@@ -60,14 +60,25 @@ public class PlayerInteraction : MonoBehaviour
         pOSController.OpenFloorMap();
     }
 
+    private void OpenSpecificOrderPOS(TableController table)
+    {
+        playerInput.SwitchCurrentActionMap("UI");
+        cameraController.SwitchCameras();
+        cameraController.HardLookAtObject(pOSController.gameObject);
+        pOSController.enabled = true;
+        pOSController.SetActiveTable(table);
+        pOSController.OpenMenuPanels();
+    }
+
     private void TakeCustomerOrder()
     {
         orderingCanvas.SetActive(true);
         serverNotes.OpenTableNotes(tableTouched);
 
         cameraController.MoveHardLookCamera(tableTouched.transform);
-        GameObject customerHead = tableTouched.GetCurrentParty().partyCustomers[0].GetComponent<CustomerController>().GetCustomerHead();
-        cameraController.HardLookAtObject(customerHead);
+        CustomerController customer = tableTouched.GetCurrentParty().partyCustomers[0].GetComponent<CustomerController>();
+        customer.SetHasOrdered();
+        cameraController.HardLookAtObject(customer.GetCustomerHead());
 
         //start customer dialogue at Seat 1
         customerDialogue.currentCustomerIndex = 0;
@@ -75,6 +86,7 @@ public class PlayerInteraction : MonoBehaviour
         customerDialogue.StartTypewriterCoroutine(customerDialogue.GetOrderText());
         cameraController.SwitchCameras();
         playerInput.SwitchCurrentActionMap("Taking Orders");
+        tableTouched.isReadyToOrder = false;
     }
 
     void CheckIfInteractable()
@@ -91,40 +103,69 @@ public class PlayerInteraction : MonoBehaviour
             {
                 tableTouched = objectHit.GetComponent<TableController>();
                 
-                if(!isCarryingPlate && !isCarryingCheck && tableTouched.hasCustomersSeated && !tableTouched.isFoodDropped && !isBusy)
+                if(tableTouched.isReadyToOrder && !isCarryingCheck && !isCarryingPlate && !isCarryingDirtyPlate)
                 {//check if player can take a table's order
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
-                        TakeCustomerOrder();
                         lastTableTouched = tableTouched;
+                        cameraController.ChangeReticleColor(Color.red);
+                        TakeCustomerOrder();
                     }
                 }
 
-                else if(isCarryingPlate && !isCarryingCheck && tableTouched.GetTableNumber() == plateTableDestination && !isBusy)
+                else if(tableTouched.isReadyToEat && isCarryingPlate && tableTouched.name == plateTableDestination.ToString())
+                //isCarryingPlate && !isCarryingCheck && tableTouched.GetTableNumber() == plateTableDestination && !isBusy)
                 {//check if player can drop food at a table
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
                         PlaceFoodAtTable();
+                        cameraController.ChangeReticleColor(Color.red);
                     }
                 }
 
-                else if(!isCarryingPlate && !tableTouched.GetIsTableStillEating() && tableTouched.isFoodDropped && !isCarryingCheck && !isBusy)
+                else if(tableTouched.isReadyToBus && !isCarryingCheck && !isCarryingPlate && !isCarryingDirtyPlate)
                 {//check if player can clear plates from a table
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
                         PickUpDirtyPlates();
+                        cameraController.ChangeReticleColor(Color.red);
                     }
                 }
 
-                else if(isCarryingCheck && tableTouched.currentParty.isReadyToPay && !isBusy)
+                else if(isCarryingCheck && tableTouched.isReadyForCheck && checkInHand.tableNumber.ToString() == tableTouched.name)
                 {//check if player can drop a check at a table
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
+                        tableTouched.isReadyForCheck = false;
                         StartCoroutine(DropOffCheck(hit));
+                        cameraController.ChangeReticleColor(Color.red);
+                    }
+                }
+
+                else if(!isCarryingCheck && !isCarryingPlate && !isCarryingDirtyPlate && tableTouched.GetHasDroppedCreditCard())
+                {//check if check on table is ready for player to pick up and process payment
+                    cameraController.ChangeReticleColor(Color.green);
+                    if(isInteractPressed)
+                    {
+                        tableTouched.hasDroppedCreditCard = false;
+                        PickUpCheckWithCard();
+                        cameraController.ChangeReticleColor(Color.red);
+                    }
+                }
+
+                else if(isCarryingCheck && checkInHand.tableNumber.ToString() == tableTouched.name && 
+                                                                    tableTouched.isReadyToTipAndLeave)
+                {//dropping off check last time)
+                    cameraController.ChangeReticleColor(Color.blue);
+                    if(isInteractPressed)
+                    {
+                        tableTouched.isReadyToTipAndLeave = false;
+                        FinalCheckDrop();
+                        cameraController.ChangeReticleColor(Color.red);
                     }
                 }
 
@@ -134,13 +175,28 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
             //check if can interact with POS
-            else if(objectHit.tag == "POS" && !isCarryingCheck && !isBusy)
+            else if(objectHit.tag == "POS")
             {//check if player can interact with the POS
-                cameraController.ChangeReticleColor(Color.green);
                 cameraController.MoveHardLookCamera(gameObject.transform);
-                if(isInteractPressed)
+                if(!isCarryingCheck)
                 {
-                    InteractWithPOS();
+                    cameraController.ChangeReticleColor(Color.green);
+                    if(isInteractPressed)
+                    {
+                        InteractWithPOS();
+                        cameraController.ChangeReticleColor(Color.red);
+                    }
+                }
+                else if(isCarryingCheck && checkInHand != null)
+                {
+                    cameraController.ChangeReticleColor(Color.green);
+                    if(isInteractPressed)
+                    {
+                        TableController table = checkInHand.partyController.assignedTable;
+                        OpenSpecificOrderPOS(table);
+                        cameraController.ChangeReticleColor(Color.red);
+                    }
+
                 }
             }
             //check if can interact with plate on kitchen window
@@ -151,15 +207,17 @@ public class PlayerInteraction : MonoBehaviour
                 if(isInteractPressed)
                 {
                     PickUpFood(plateTouched);
+                    cameraController.ChangeReticleColor(Color.red);
                 }
             }
             //check if can put dirty dish in dish pit
-            else if(objectHit.tag == "Dish Pit" && isCarryingDirtyPlate && !isCarryingCheck && !isBusy)
+            else if(objectHit.tag == "Dish Pit" && isCarryingDirtyPlate)
             {
                 cameraController.ChangeReticleColor(Color.green);
                 if(isInteractPressed)
                 {
                     PutDishesInWash();
+                    cameraController.ChangeReticleColor(Color.red);
                 }
             }
 
@@ -187,15 +245,13 @@ public class PlayerInteraction : MonoBehaviour
 
     void PickUpFood(GameObject obj)
     {
+        plateCarried = plateTouched;
         armWithPlate.SetActive(true);
         armWithPlate.GetComponentInChildren<TextMeshProUGUI>().text = obj.GetComponentInChildren<TextMeshProUGUI>().text;
         kitchenWindowController.ReopenWindowSlot(plateTouched.transform.parent.gameObject);
         isCarryingPlate = true;
         plateTableDestination = int.Parse(plateTouched.name);
         plateTouched = null;
-        //plateCarried = plateTouched;
-        //plateCarried.transform.position = armWithPlate.transform.GetChild(0).position;
-        //plateCarried.transform.SetParent(armWithPlate.transform);
     }
 
     void PlaceFoodAtTable()
@@ -204,22 +260,18 @@ public class PlayerInteraction : MonoBehaviour
         armWithPlate.SetActive(false);
         plateTableDestination = 0;
         isCarryingPlate = false;
+        tableTouched.isReadyToEat = false;
     }
 
     void PickUpDirtyPlates()
     {
-        for(int i = 0; i < tableTouched.GetCurrentParty().partyCustomers.Count; i++)
-        {
-            if(tableTouched.GetCurrentParty().partyCustomers[i].GetComponent<CustomerController>().GetIsEating())
-            {
-                return;
-            }
-        }
         armWithPlate.SetActive(true);
         armWithPlate.GetComponentInChildren<TextMeshProUGUI>().text = "Dirty";
         isCarryingDirtyPlate = true;
         tableTouched.RemovePlatesFromTable();
-        tableTouched.currentParty.isReadyToPay = true;
+        tableTouched.isReadyToBus = false;
+        tableTouched.isReadyForCheck = true;
+        //tableTouched.currentParty.isReadyForCheck = true;
     }
 
     void PutDishesInWash()
@@ -231,7 +283,7 @@ public class PlayerInteraction : MonoBehaviour
     IEnumerator DropOffCheck(RaycastHit hit)
     {
         isCarryingCheck = false;
-        GameObject checkPresenter = gameObject.transform.Find("Arm With Check").Find("Check Presenter Prefab Open(Clone)").gameObject;
+        GameObject checkPresenter = armForCheckPresenters.transform.Find("Check Presenter Prefab Open(Clone)").gameObject;
         checkPresenter.transform.parent = null;
         
         while(checkPresenter.transform.position != hit.point)
@@ -243,12 +295,43 @@ public class PlayerInteraction : MonoBehaviour
         checkPresenter.transform.parent = hit.transform;
         checkPresenter.name = "Check Presenter";
         
-        gameObject.transform.Find("Arm With Check").transform.gameObject.SetActive(false);
+        armForCheckPresenters.transform.gameObject.SetActive(false);
         isBusy = true;
         
-        StartCoroutine(hit.transform.GetComponent<TableController>().currentParty.PayCheck());
+        float randomPaymentDelay = Random.Range(2500f, 3500f) * Time.deltaTime;
+        StartCoroutine(hit.transform.GetComponent<TableController>().CloseCheckPresenter(randomPaymentDelay));
         yield return new WaitForSeconds(2f);
 
         isBusy = false;
+    }
+
+    public void PickUpCheckWithCard()
+    {
+        armForCheckPresenters.transform.gameObject.SetActive(true);
+        lastTableTouched = tableTouched;
+        checkInHand = lastTableTouched.GetCurrentParty().transform.GetComponent<CheckController>();
+        GameObject checkPresenter = tableTouched.transform.Find("Check Presenter with Card").gameObject;
+        checkPresenter.transform.SetParent(armForCheckPresenters.transform);
+        GameObject checkSpot = armForCheckPresenters.transform.Find("CheckSpot").gameObject;
+        //checkPresenter.transform.position = checkSpot.transform.position;
+        checkPresenter.transform.localPosition = new Vector3(0.85f, 0.74f, -1.5f);
+        checkPresenter.transform.localScale = checkSpot.transform.localScale;
+        checkPresenter.transform.localEulerAngles = checkSpot.transform.localEulerAngles;
+
+        isCarryingCheck = true;
+        lastTableTouched.GetCurrentParty().GetComponent<CheckController>().isReadyToClose = true;
+    }
+
+    public GameObject GetCheckArmTransform()
+    {
+        return armForCheckPresenters;
+    }
+
+    public void FinalCheckDrop()
+    {
+        StartCoroutine(checkInHand.partyController.assignedTable.ResetTable());
+        isCarryingCheck = false;
+        armForCheckPresenters.transform.gameObject.SetActive(false);
+        checkInHand.SignReceiptTipAndLeave();
     }
 }

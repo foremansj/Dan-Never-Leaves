@@ -86,18 +86,10 @@ public class CustomerDialogue : MonoBehaviour
             CustomerController customer = seatedCustomers[currentCustomerIndex].GetComponent<CustomerController>();
             cameraController.HardLookAtObject(customer.GetCustomerHead());
             GenerateOrderDialogue(customer.GetFullCustomerOrder());
+            customer.SetHasOrdered();
             dialogueCoroutine = StartCoroutine(TypewriteOrder(orderText));
         }
-
-        /*else if(currentCustomerIndex + 1 == seatedCustomers.Count)
-        {
-            CustomerController customer = seatedCustomers[currentCustomerIndex].GetComponent<CustomerController>();
-            cameraController.HardLookAtObject(customer.GetCustomerHead());
-            GenerateOrderDialogue(customer.GetFullCustomerOrder());
-            dialogueCoroutine = StartCoroutine(TypewriteOrder(orderText));
-
-            //remove next customer button and/or make it save the notes
-        }*/
+        
         else
         {
             serverNotes.gameObject.SetActive(false);

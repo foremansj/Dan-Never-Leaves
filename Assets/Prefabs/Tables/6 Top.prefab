@@ -447,10 +447,12 @@ MonoBehaviour:
   - {fileID: 7448983164775114853}
   - {fileID: 4043590923166759086}
   foodPrefab: {fileID: 5969748797086783546, guid: 2ad8059e49bb10346b91f4eebceb002f, type: 3}
+  closedCheckPresenterPrefab: {fileID: 780189150936682933, guid: ca42d9c9f0401f149997655b72baebbf, type: 3}
   currentParty: {fileID: 0}
   hasCustomersSeated: 0
-  foodDropped: 0
-  finishedEating: 0
+  isFoodDropped: 0
+  isFinishedEating: 0
+  isCheckDropped: 0
 --- !u!114 &4848222538461769503
 MonoBehaviour:
   m_ObjectHideFlags: 0

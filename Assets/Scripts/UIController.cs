@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour
     [SerializeField] TextMeshProUGUI totalSalesText;
     [SerializeField] TextMeshProUGUI totalTipsText;
     [SerializeField] TextMeshProUGUI totalTipsPercentText;
+    [SerializeField] GameObject StepsOfServiceInstructions;
     
     public float totalSalesAmount;
     public float totalTipsAmount;
@@ -37,6 +38,7 @@ public class UIController : MonoBehaviour
     void Update()
     {
         PauseGame();
+        ViewStepsOfService();
         GameTimer();
     }
 
@@ -83,18 +85,46 @@ public class UIController : MonoBehaviour
 
     private void PauseGame()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && !isPaused)
+        if(Input.GetKeyDown(KeyCode.BackQuote) && !isPaused)
         {
             Time.timeScale = 0;
             isPaused = true;
             Cursor.lockState = CursorLockMode.None;
         }
 
-        else if(Input.GetKeyDown(KeyCode.Escape) && isPaused)
+        else if(Input.GetKeyDown(KeyCode.BackQuote) && isPaused)
         {
             Time.timeScale = 1;
             isPaused = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
+
+    private void ViewStepsOfService()
+    {
+        if(Input.GetKeyDown(KeyCode.Tab) && !StepsOfServiceInstructions.activeInHierarchy)
+        {
+            StepsOfServiceInstructions.SetActive(true);
+        }
+        else if(Input.GetKeyDown(KeyCode.Tab) && StepsOfServiceInstructions.activeInHierarchy)
+        {
+            StepsOfServiceInstructions.SetActive(false);
+        }
+    }
+
+    public void HideUI()
+    {
+        timeText.enabled = false;
+        totalSalesText.enabled = false;
+        totalTipsText.enabled = false;
+        totalTipsPercentText.enabled = false;
+    }
+
+    public void UnhideUI()
+    {
+        timeText.enabled = true;
+        totalSalesText.enabled = true;
+        totalTipsText.enabled = true;
+        totalTipsPercentText.enabled = true;
     }
 }

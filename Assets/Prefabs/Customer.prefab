@@ -228,6 +228,8 @@ MonoBehaviour:
   fullOrder: []
   eatingDuration: 0
   eatingSpeedModifier: 0
+  reachedExit: 0
+  isLeaving: 0
 --- !u!1 &3194123231212733110
 GameObject:
   m_ObjectHideFlags: 0
