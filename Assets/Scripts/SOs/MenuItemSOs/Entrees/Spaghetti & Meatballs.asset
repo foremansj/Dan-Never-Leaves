@@ -17,3 +17,4 @@ MonoBehaviour:
   baseCost: 19.99
   taxRate: 0.01
   ticketTimeSeconds: 45
+  classification: Entree

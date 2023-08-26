@@ -68,6 +68,17 @@ public class POSController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         backgroundPanel.SetActive(true);
         floorMapPanel.SetActive(true);
+        for(int i = 0; i < floorMapPanel.transform.childCount; i++)
+        {
+            if(floorMapPanel.transform.GetChild(i).GetComponent<POSTableController>().GetLinkedTable().GetComponent<TableController>().GetCurrentParty() != null)
+            {
+                floorMapPanel.transform.GetChild(i).GetComponent<Image>().color = Color.green;
+            }
+            else
+            {
+                floorMapPanel.transform.GetChild(i).GetComponent<Image>().color = Color.magenta;
+            }
+        }
     }
 
     public void OpenMenuPanels()
@@ -222,14 +233,22 @@ public class POSController : MonoBehaviour
     {
         //SwapDictionaries(activeCheck.playerEnteredOrder, activeCheck.currentKitchenTicket);
         //AddToPlayerEnteredOrderDict();
-        activeCheck.SendToKitchen();
-        activeCheck.partyController.assignedTable.isReadyToEat = true;
-        if(activeCheck.checkNumber == 0)
+        if(activeCheck.currentKitchenTicket.Count > 0)
         {
-            activeCheck.SetCheckNumber(checkNumberCounter);
-            checkNumberCounter++;
+            activeCheck.SendToKitchen();
+            activeCheck.partyController.assignedTable.isReadyToEat = true;
+            if(activeCheck.checkNumber == 0)
+            {
+                activeCheck.SetCheckNumber(checkNumberCounter);
+                checkNumberCounter++;
+            }
+            activeCheck.currentKitchenTicket.Clear();
         }
-        activeCheck.currentKitchenTicket.Clear();
+        else
+        {
+            return;
+        }
+
     }
 
     public void CancelChanges()

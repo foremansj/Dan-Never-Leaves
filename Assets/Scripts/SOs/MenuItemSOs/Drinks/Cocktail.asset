@@ -17,3 +17,4 @@ MonoBehaviour:
   baseCost: 13
   taxRate: 0.0625
   ticketTimeSeconds: 20
+  classification: Alcohol

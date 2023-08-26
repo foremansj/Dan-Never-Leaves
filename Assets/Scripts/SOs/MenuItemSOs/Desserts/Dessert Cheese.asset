@@ -17,3 +17,4 @@ MonoBehaviour:
   baseCost: 15.99
   taxRate: 0.01
   ticketTimeSeconds: 10
+  classification: Dessert

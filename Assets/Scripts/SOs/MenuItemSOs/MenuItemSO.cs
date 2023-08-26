@@ -13,6 +13,7 @@ public class MenuItemSO : ScriptableObject
     public float taxRate;
     
     public float ticketTimeSeconds;
+    public string classification;
 
     public float GetTotalCost()
     {

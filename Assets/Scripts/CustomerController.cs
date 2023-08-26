@@ -110,10 +110,10 @@ public class CustomerController : MonoBehaviour
     }
 
     private void GenerateOrder()
-    {
+    {//additional course orders commented out for testing, add back later
         if(!hasOrdered && !isChild)
         {
-            bool gettingAppetizer = Random.value > 0.5f;
+            /*bool gettingAppetizer = Random.value > 0.5f;
             bool gettingDessert = Random.value > 0.5f;
             
             drink = menuDatabase.GetRandomDrink();
@@ -122,23 +122,22 @@ public class CustomerController : MonoBehaviour
             {
                 firstCourse = menuDatabase.GetRandomAppetizer();
                 fullOrder.Add(firstCourse);
-            }
+            }*/
             mainCourse = menuDatabase.GetRandomEntree();
             fullOrder.Add(mainCourse);
             
-            if(gettingDessert)
+            /*if(gettingDessert)
             {
                 dessert = menuDatabase.GetRandomDessert();
                 fullOrder.Add(dessert);
-            }
+            }*/
         }
         else if(!hasOrdered && isChild)
         {
-            drink = menuDatabase.GetKidsDrink();
-            fullOrder.Add(drink);
+            //drink = menuDatabase.GetKidsDrink();
+            //fullOrder.Add(drink);
             mainCourse = menuDatabase.GetRandomKidsMenuItem();
             fullOrder.Add(mainCourse);
-
         }
     }
 

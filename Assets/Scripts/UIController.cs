@@ -20,8 +20,6 @@ public class UIController : MonoBehaviour
     float seconds;
     float minutes;
     float hours = 5f;
-    
-    bool isPaused;
 
     private void Awake()
     {
@@ -37,7 +35,7 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PauseGame();
+        
         ViewStepsOfService();
         GameTimer();
     }
@@ -83,22 +81,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void PauseGame()
-    {
-        if(Input.GetKeyDown(KeyCode.BackQuote) && !isPaused)
-        {
-            Time.timeScale = 0;
-            isPaused = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
-
-        else if(Input.GetKeyDown(KeyCode.BackQuote) && isPaused)
-        {
-            Time.timeScale = 1;
-            isPaused = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-    }
+    
 
     private void ViewStepsOfService()
     {

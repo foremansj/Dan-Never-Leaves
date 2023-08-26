@@ -8,6 +8,7 @@ public class CustomerDialogue : MonoBehaviour
     [SerializeField] ServerNotes serverNotes;
     [SerializeField] TextMeshProUGUI orderingDialogueText;
     [SerializeField] float typewriterEffectDelay;
+    [SerializeField] float nextCustomerOrderDelay;
     [SerializeField] GameObject player;
 
     TableController tableController;

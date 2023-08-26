@@ -27,11 +27,8 @@ public class KitchenWindowController : MonoBehaviour
     public IEnumerator StartCookingTicket(int tableNumber, Dictionary<MenuItemSO, int> ticket, float ticketTime)
     {
         //wait for the ticket time to expire
-        Debug.Log("ticket time = " + ticketTime);
         yield return new WaitForSeconds(ticketTime);
-        Debug.Log("Food is ready for table " + tableNumber);
         ResetOpenWindowSlots();
-        //yield return null;
         GameObject openWindow = FindOpenWindowTransform();
         Vector3 spawnPosition = openWindow.transform.position;
         if(spawnPosition != null)
