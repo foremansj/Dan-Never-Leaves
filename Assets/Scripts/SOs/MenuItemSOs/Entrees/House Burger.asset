@@ -16,5 +16,5 @@ MonoBehaviour:
   description: House burger with cheese
   baseCost: 19.99
   taxRate: 0.01
-  ticketTimeSeconds: 60
+  ticketTimeSeconds: 45
   classification: Entree

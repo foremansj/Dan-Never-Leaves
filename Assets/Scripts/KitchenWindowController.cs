@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +12,8 @@ public class KitchenWindowController : MonoBehaviour
     [SerializeField] List<GameObject> occupiedKitchenWindowSlots;
     [SerializeField] GameObject foodPrefab;
     [SerializeField] GameObject kitchenWindow;
+    [SerializeField] TextMeshProUGUI handsText;
+    [SerializeField] float handsTextDuration = 500f;
 
     public float SetTicketTime(Dictionary<MenuItemSO, int> ticket)
     {
@@ -33,12 +37,13 @@ public class KitchenWindowController : MonoBehaviour
         Vector3 spawnPosition = openWindow.transform.position;
         if(spawnPosition != null)
         {
+            StartCoroutine(CallForHands(tableNumber));
             GameObject food = Instantiate(foodPrefab, spawnPosition, Quaternion.identity);
             food.GetComponentInChildren<TextMeshProUGUI>().text = "Table " + tableNumber;
             food.name = tableNumber.ToString();
             food.transform.parent = openWindow.transform;
         }
-        
+
         yield return null;
     }
 
@@ -71,5 +76,13 @@ public class KitchenWindowController : MonoBehaviour
         {
             freeKitchenWindowSlots.Add(kitchenWindow.transform.GetChild(i).gameObject);
         }
+    }
+
+    public IEnumerator CallForHands(int table)
+    {
+        handsText.text = "HANDS Table " + table;
+        handsText.enabled = true;
+        yield return new WaitForSeconds(handsTextDuration * Time.deltaTime);
+        handsText.enabled = false;
     }
 }

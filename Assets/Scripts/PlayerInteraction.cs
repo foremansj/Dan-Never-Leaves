@@ -23,8 +23,8 @@ public class PlayerInteraction : MonoBehaviour
     public CheckController checkInHand;
     public GameObject plateTouched;
 
-    bool isCarryingPlate = false;
-    bool isCarryingDirtyPlate = false;
+    public bool isCarryingPlate = false;
+    public bool isCarryingDirtyPlate = false;
     public int plateTableDestination;
     public bool isCarryingCheck = false; 
     bool isInteractPressed;
@@ -120,6 +120,7 @@ public class PlayerInteraction : MonoBehaviour
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
+                        lastTableTouched = tableTouched;
                         PlaceFoodAtTable();
                         cameraController.ChangeReticleColor(Color.red);
                     }
@@ -130,6 +131,7 @@ public class PlayerInteraction : MonoBehaviour
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
+                        lastTableTouched = tableTouched;
                         PickUpDirtyPlates();
                         cameraController.ChangeReticleColor(Color.red);
                     }
@@ -140,6 +142,7 @@ public class PlayerInteraction : MonoBehaviour
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
+                        lastTableTouched = tableTouched;
                         tableTouched.isReadyForCheck = false;
                         StartCoroutine(DropOffCheck(hit));
                         cameraController.ChangeReticleColor(Color.red);
@@ -151,19 +154,21 @@ public class PlayerInteraction : MonoBehaviour
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
+                        lastTableTouched = tableTouched;
                         tableTouched.hasDroppedCreditCard = false;
                         PickUpCheckWithCard();
                         cameraController.ChangeReticleColor(Color.red);
                     }
                 }
 
-                else if(isCarryingCheck && checkInHand.tableNumber.ToString() == tableTouched.name && 
+                else if(isCarryingCheck && checkInHand.tableNumber.ToString() == tableTouched.name && checkInHand.justNeedsATip &&
                                                                     tableTouched.isReadyToTipAndLeave)
                 {//dropping off check last time)
                     cameraController.ChangeReticleColor(Color.blue);
                     if(isInteractPressed)
                     {
-                        tableTouched.isReadyToTipAndLeave = false;
+                        lastTableTouched = tableTouched;
+                        lastTableTouched.isReadyToTipAndLeave = false;
                         FinalCheckDrop();
                         cameraController.ChangeReticleColor(Color.red);
                     }
@@ -298,7 +303,7 @@ public class PlayerInteraction : MonoBehaviour
         armForCheckPresenters.transform.gameObject.SetActive(false);
         isBusy = true;
         
-        float randomPaymentDelay = Random.Range(2500f, 3500f) * Time.deltaTime;
+        float randomPaymentDelay = Random.Range(20f, 40f);
         StartCoroutine(hit.transform.GetComponent<TableController>().CloseCheckPresenter(randomPaymentDelay));
         yield return new WaitForSeconds(2f);
 
@@ -331,6 +336,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         StartCoroutine(checkInHand.partyController.assignedTable.ResetTable());
         isCarryingCheck = false;
+        Destroy(armForCheckPresenters.transform.GetChild(1).gameObject, 1f);
         armForCheckPresenters.transform.gameObject.SetActive(false);
         checkInHand.SignReceiptTipAndLeave();
     }

@@ -14,6 +14,7 @@ public class TableController : MonoBehaviour
     [SerializeField] GameObject closedCheckPresenterPrefab;
 
     HostStand host;
+    ServerNotes notes;
     public PartyController currentParty;
     Dictionary<int, List<MenuItemSO>> ordersBySeatNumber = new Dictionary<int, List<MenuItemSO>>();
 
@@ -35,6 +36,7 @@ public class TableController : MonoBehaviour
     private void Awake()
     {
         host = FindObjectOfType<HostStand>();
+        notes = FindObjectOfType<ServerNotes>();
     }
     void Start()
     {
@@ -160,6 +162,7 @@ public class TableController : MonoBehaviour
         isFinishedEating = false;
         isCheckDropped = false;
         hasDroppedCreditCard = false;
+        notes.DeleteTableNotes(tableNumber);
         yield return new WaitForSeconds(10f);
         host.ReopenTableForSeating (this);
     }

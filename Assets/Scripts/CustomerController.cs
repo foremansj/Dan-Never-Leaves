@@ -55,7 +55,7 @@ public class CustomerController : MonoBehaviour
             isChild = true;
         }
 
-        eatingDuration = Random.Range(35f, 55f);
+        eatingDuration = Random.Range(60f, 100f);
         
         GenerateOrder();
     }

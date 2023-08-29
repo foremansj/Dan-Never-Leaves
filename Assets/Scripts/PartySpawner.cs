@@ -34,7 +34,7 @@ public class PartySpawner : MonoBehaviour
         do
         {
             startOver:
-                int partySize = Random.Range(2,6);
+                int partySize = Random.Range(2,7);
                 GameObject newParty = new GameObject("Party of " + partySize);
                 newParty.AddComponent<PartyController>();
                 for(int i = 0; i < partySize; i++)
@@ -54,12 +54,12 @@ public class PartySpawner : MonoBehaviour
         switch(Time.time)
         {
             case float n when (n <= 60):
-                customerSpawnDelay = 45f;
+                customerSpawnDelay = 40f;
                 //isOpenForBusiness = true;
                 break;
 
             case float n when (n > 60 && n <= 120):
-                customerSpawnDelay = 55f;
+                customerSpawnDelay = 50f;
                 //isOpenForBusiness = true;
                 break;
             
@@ -68,19 +68,26 @@ public class PartySpawner : MonoBehaviour
                 //isOpenForBusiness = true;
                 break;
             
-            case float n when (n > 180 && n <= 240):
-                customerSpawnDelay = 50f;
+            case float n when (n > 180 && n <= 300):
+                customerSpawnDelay = 55f;
                 //isOpenForBusiness = true;
                 break;
             
-            case float n when (n > 240 && n <= 300):
-                customerSpawnDelay = 55f;
+            case float n when (n > 300 && n <= 420):
+                customerSpawnDelay = 45f;
                 //isOpenForBusiness = false;
                 break;
             
+            case float n when (n > 420 && n <= 540):
+                customerSpawnDelay = 55f;
+                //isOpenForBusiness = false;
+                break;
+
+
+            
             default:
-                customerSpawnDelay = 100000f;
-                StopCoroutine(CreateNewParty());
+                customerSpawnDelay = 70f;
+                //StopCoroutine(CreateNewParty());
                 break;
         }
     }

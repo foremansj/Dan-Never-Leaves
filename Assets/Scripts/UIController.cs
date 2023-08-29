@@ -21,10 +21,13 @@ public class UIController : MonoBehaviour
     float minutes;
     float hours = 5f;
 
+    PlayerInteraction playerInteraction;
+
     private void Awake()
     {
         IncrementTotalSales(0f);
         IncrementTotalTips(0f);
+        playerInteraction = FindObjectOfType<PlayerInteraction>();
     }
 
     private void Start()
@@ -109,5 +112,19 @@ public class UIController : MonoBehaviour
         totalSalesText.enabled = true;
         totalTipsText.enabled = true;
         totalTipsPercentText.enabled = true;
+    }
+
+    public void ClearPlayerHand()
+    {
+    if(playerInteraction.lastTableTouched)
+    {
+
+    }
+    playerInteraction.isCarryingPlate = false;
+    playerInteraction.isCarryingDirtyPlate = false;
+    playerInteraction.plateTableDestination = 0;
+    playerInteraction.isCarryingCheck = false; 
+    playerInteraction.checkInHand = null;
+    playerInteraction.plateTouched = null;
     }
 }
