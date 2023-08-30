@@ -33,7 +33,7 @@ public class CustomerDialogue : MonoBehaviour
         orderText = "I would like the ";
         for(int i = 0; i < order.Count; i++)
         {
-            orderText += (order[i].ToString() + "\n");
+            orderText += order[i].ToString() + "\n";
         }
         orderText = orderText.Replace("(MenuItemSO)", "");
         return orderText;
@@ -48,7 +48,6 @@ public class CustomerDialogue : MonoBehaviour
     {
         if(order != null)
         {
-            //typewriterIsRunning = true;
             orderingDialogueText.text = null;
             foreach(char letter in order)
             {
@@ -62,8 +61,6 @@ public class CustomerDialogue : MonoBehaviour
 
     public void StartTypewriterCoroutine(string order)
     {
-        //StopCoroutine(nameof(TypewriteOrder));
-        //orderingDialogueText.text = null;
         dialogueCoroutine = StartCoroutine(TypewriteOrder(order));
     }
 

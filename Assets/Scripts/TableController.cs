@@ -12,6 +12,7 @@ public class TableController : MonoBehaviour
     [SerializeField] List<GameObject> seats;
     [SerializeField] GameObject foodPrefab;
     [SerializeField] GameObject closedCheckPresenterPrefab;
+    [SerializeField] TextMeshProUGUI tableNumberText;
 
     HostStand host;
     ServerNotes notes;
@@ -46,6 +47,7 @@ public class TableController : MonoBehaviour
         {
             seats[i].name = "Seat #" + (i + 1);
         }
+        tableNumberText.text = tableNumber.ToString();
     }
     
     public int GetMaxCustomers()

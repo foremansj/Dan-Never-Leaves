@@ -806,7 +806,7 @@ MonoBehaviour:
   m_text: Start Shift
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 69cc20920ba6f754288629d76d308889, type: 2}
-  m_sharedMaterial: {fileID: -7321054722368953619, guid: 69cc20920ba6f754288629d76d308889, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 88fc11d6e26e9d444b9872118f679928, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1436,8 +1436,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Dan Never Leaves
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: cd06436ae37325640affbb18c4d3f031, type: 2}
-  m_sharedMaterial: {fileID: -7321054722368953619, guid: 69cc20920ba6f754288629d76d308889, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 69cc20920ba6f754288629d76d308889, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 88fc11d6e26e9d444b9872118f679928, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

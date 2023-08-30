@@ -30,12 +30,14 @@ public class CheckController : MonoBehaviour
 
     KitchenWindowController kitchenWindowController;
     UIController uIController;
+    ScoreKeeper scoreKeeper;
     public PartyController partyController;
     
     private void Awake()
     {
         kitchenWindowController = FindObjectOfType<KitchenWindowController>();
         uIController = FindObjectOfType<UIController>();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
     }
 
     private void Start()
@@ -121,8 +123,8 @@ public class CheckController : MonoBehaviour
     {
         if(isReadyToClose)
         {
-            uIController.IncrementTotalSales(subtotal);
-            uIController.IncrementTipsPercent();
+            scoreKeeper.IncrementTotalSales(subtotal);
+            scoreKeeper.IncrementTipsPercent();
             justNeedsATip = true;
         }
     }
@@ -138,8 +140,8 @@ public class CheckController : MonoBehaviour
             }
         }
         tipAmount = subtotal * tipPercent;
-        uIController.IncrementTotalTips(tipAmount);
-        uIController.IncrementTipsPercent();
+        scoreKeeper.IncrementTotalTips(tipAmount);
+        scoreKeeper.IncrementTipsPercent();
         //move check to database or simply add numbers to UI counter
         //maybe saving checks in a database is a later thing
         partyController.LeaveRestaurant();

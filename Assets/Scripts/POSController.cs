@@ -12,6 +12,8 @@ public class POSController : MonoBehaviour
     [Header("UI Panels")]
     [SerializeField] GameObject backgroundPanel;
     //[SerializeField] GameObject loginScreenPanel;
+    [SerializeField] GameObject closePOSButton;
+    [SerializeField] GameObject backToFloormapButton;
     [SerializeField] GameObject receiptPanel;
     [SerializeField] GameObject menuPanel;
     [SerializeField] GameObject floorMapPanel;
@@ -67,17 +69,43 @@ public class POSController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
         backgroundPanel.SetActive(true);
+        closePOSButton.SetActive(true);
+        backToFloormapButton.SetActive(false);
         floorMapPanel.SetActive(true);
+
+        receiptPanel.SetActive(false);
+        menuPanel.SetActive(false);
+        openNotesButton.SetActive(false);
+
         for(int i = 0; i < floorMapPanel.transform.childCount; i++)
         {
-            if(floorMapPanel.transform.GetChild(i).GetComponent<POSTableController>().GetLinkedTable().GetComponent<TableController>().GetCurrentParty() != null)
+            if(floorMapPanel.transform.GetChild(i).name.Contains("Table"))
+            {
+                TableController table = floorMapPanel.transform.GetChild(i).GetComponent<POSTableController>()
+                                                            .GetLinkedTable().GetComponent<TableController>();
+                if(table.GetCurrentParty() != null)
+                {
+                    floorMapPanel.transform.GetChild(i).GetComponent<Image>().color = Color.green;
+                }
+                else
+                {
+                    floorMapPanel.transform.GetChild(i).GetComponent<Image>().color = Color.white;
+                }
+            }
+            
+            /*if(floorMapPanel.transform.GetChild(i).GetComponent<POSTableController>().GetLinkedTable().GetComponent<TableController>().GetCurrentParty() != null
+                    && floorMapPanel.transform.GetChild(i).name.Contains("Table"))
             {
                 floorMapPanel.transform.GetChild(i).GetComponent<Image>().color = Color.green;
+            }
+            else if(floorMapPanel.transform.GetChild(i).name.Contains("Image"))
+            {
+                //do nothing
             }
             else
             {
                 floorMapPanel.transform.GetChild(i).GetComponent<Image>().color = Color.magenta;
-            }
+            }*/
         }
     }
 
@@ -88,12 +116,13 @@ public class POSController : MonoBehaviour
             floorMapPanel.SetActive(false);
             receiptPanel.SetActive(true);
             menuPanel.SetActive(true);
+            backToFloormapButton.SetActive(true);
             SetOrderScreen();
             openNotesButton.SetActive(true);
+            closePOSButton.SetActive(true);
         }
         else
         {
-            Console.WriteLine("There are no customers at that table!");
             return;
         }
     }
@@ -106,6 +135,8 @@ public class POSController : MonoBehaviour
         menuPanel.SetActive(false);
         backgroundPanel.SetActive(false);
         openNotesButton.SetActive(false);
+        closePOSButton.SetActive(false);
+        backToFloormapButton.SetActive(false);
         cameraController.SwitchCameras();
         playerInput.SwitchCurrentActionMap("Player");
     }
