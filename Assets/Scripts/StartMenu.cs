@@ -7,7 +7,7 @@ public class StartMenu : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("First Floor");
     }
 
     public void QuitGame()
@@ -15,13 +15,18 @@ public class StartMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void OpenOptionsMenu()
+    public void OpenCredits()
     {
-
+        SceneManager.LoadScene("Credits");
     }
 
     public void OpenHowToPlay()
     {
-        
+        SceneManager.LoadScene("How To Play");
+    }
+
+    public void OpenStartMenu()
+    {
+        SceneManager.LoadScene("Start Menu");
     }
 }

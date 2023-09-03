@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Roboto-Black Atlas Material Glow Underlay Variant
+  m_Name: Roboto-Black Atlas Material Title Variant
   m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
   m_Parent: {fileID: -7321054722368953619, guid: 69cc20920ba6f754288629d76d308889, type: 2}
   m_ModifiedSerializedProperties: 0
@@ -28,14 +28,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _GlowInner: 1
-    - _GlowOffset: 1
     - _GlowPower: 1
-    - _OutlineWidth: 0
-    - _ScaleRatioA: 0.9
-    - _ScaleRatioB: 0.365625
-    - _UnderlayOffsetX: 1
-    - _UnderlayOffsetY: 1
     m_Colors:
-    - _GlowColor: {r: 0.013550587, g: 0, b: 0.745283, a: 1}
-    - _UnderlayColor: {r: 0, g: 0.0039749597, b: 0.9622642, a: 1}
+    - _GlowColor: {r: 0.23584908, g: 0, b: 0, a: 1}
+    - _UnderlayColor: {r: 1024, g: 1024, b: 1024, a: 1}
   m_BuildTextureStacks: []
