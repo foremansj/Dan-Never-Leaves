@@ -74,6 +74,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         orderingCanvas.SetActive(true);
         serverNotes.OpenTableNotes(tableTouched);
+        serverNotes.nextCustomerButtonText.text = "Next Customer";
 
         cameraController.MoveHardLookCamera(tableTouched.transform);
         CustomerController customer = tableTouched.GetCurrentParty().partyCustomers[0].GetComponent<CustomerController>();
@@ -86,7 +87,6 @@ public class PlayerInteraction : MonoBehaviour
         customerDialogue.StartTypewriterCoroutine(customerDialogue.GetOrderText());
         cameraController.SwitchCameras();
         playerInput.SwitchCurrentActionMap("Taking Orders");
-        tableTouched.isReadyToOrder = false;
     }
 
     void CheckIfInteractable()
@@ -120,6 +120,7 @@ public class PlayerInteraction : MonoBehaviour
                     cameraController.ChangeReticleColor(Color.green);
                     if(isInteractPressed)
                     {
+                        tableTouched.isReadyToOrder = false;
                         lastTableTouched = tableTouched;
                         PlaceFoodAtTable();
                         cameraController.ChangeReticleColor(Color.red);

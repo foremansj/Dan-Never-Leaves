@@ -8,6 +8,9 @@ public class ScoreKeeper : MonoBehaviour
     public float totalTipsAmount;
     public float totalTipsPercentAmount;
 
+    public float tipout;
+    public float totalEarnings;
+
     UIController uIController;
 
     static ScoreKeeper instance;
@@ -21,6 +24,11 @@ public class ScoreKeeper : MonoBehaviour
     {
         
         uIController.SetSalesAndTipsText(totalSalesAmount, totalTipsAmount);
+    }
+
+    private void Update()
+    {
+
     }
 
     // Update is called once per frame
@@ -68,14 +76,20 @@ public class ScoreKeeper : MonoBehaviour
         totalSalesAmount = 0;
         totalTipsAmount = 0;
         totalTipsPercentAmount = 0;
+        tipout = 0;
+        totalEarnings = 0;
         uIController.SetSalesAndTipsText(0,0);
     }
 
     public void CallScore()
     {
+        tipout = totalSalesAmount * .05f;
+        totalEarnings = totalTipsAmount - tipout;
+        
         uIController = FindObjectOfType<UIController>();
         uIController.totalSalesText.text = "Total Sales: " + string.Format("{0:C}", totalSalesAmount);
         uIController.totalTipsText.text = "Total Tips: " + string.Format("{0:C}", totalTipsAmount);
+        
         if(totalSalesAmount > 0)
         {
             totalTipsPercentAmount = totalTipsAmount / totalSalesAmount;
@@ -85,5 +99,11 @@ public class ScoreKeeper : MonoBehaviour
         {
             uIController.totalTipsPercentText.text = "Tip Percent: 0%";
         }
+        if(uIController.tipoutText != null && uIController.totalEarningsText != null)
+        {
+            uIController.tipoutText.text = "Tipout: " + string.Format("{0:C}", tipout);
+            uIController.totalEarningsText.text = "Total Earnings: " + string.Format("{0:C}", totalEarnings);
+        }
+        
     }
 }

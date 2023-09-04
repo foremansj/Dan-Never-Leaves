@@ -12,6 +12,7 @@ public class ServerNotes : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] public TextMeshProUGUI notesTableHeaderText;
     [SerializeField] Button saveNotesButton;
+    [SerializeField] public TextMeshProUGUI nextCustomerButtonText;
     [SerializeField] GameObject tablesideNotes;
     [SerializeField] GameObject notesWithToast;
 
@@ -20,15 +21,12 @@ public class ServerNotes : MonoBehaviour
     //public Dictionary<int, string> allTableNotes;
     int activeTableNumber; 
    
-    CustomerController customerController;
     CameraController cameraController;
 
     private void Awake()
     {
         cameraController = FindObjectOfType<CameraController>();
         workingTableNotes = new Dictionary<int, string>();
-        //oldTableNotes = new Dictionary<int, string>();
-        //allTableNotes = new Dictionary<int, string>();
         gameObject.SetActive(false);
     }
 
@@ -48,25 +46,6 @@ public class ServerNotes : MonoBehaviour
         }
     }
 
-    /*public void SetNotesTableNumber(int tableNumber)
-    {
-        //string tableNumberOnly = Regex.Replace(table.name, "[^0-9]", "");
-        notesTableHeaderText.text = "Table #" + tableNumber;
-    }*/
-
-    /*public void OLDSaveTableNotes()
-    {
-        int tableNumber = player.GetComponent<PlayerInteraction>().GetTableTouched().GetTableNumber();
-        if(workingTableNotes.ContainsKey(tableNumber))
-        {
-            workingTableNotes[tableNumber] = serverNotesInputField.text;
-        }
-        
-        else
-        {
-            workingTableNotes.Add(tableNumber, serverNotesInputField.text);
-        }
-    }*/
     public void SaveTableNotes()
     {
         workingTableNotes[activeTableNumber] = serverNotesInputField.text;
@@ -85,9 +64,6 @@ public class ServerNotes : MonoBehaviour
     {
         tablesideNotes.GetComponent<ServerNotes>().workingTableNotes[tableNumber] = null;
         notesWithToast.GetComponent<ServerNotes>().workingTableNotes[tableNumber] = null;
-        //rename the saved notes string to something indicating it is old
-        //add a strikethrough to all the text to make it look crossed out
-        //move the string so it does not come up when interacting with the table in the future
     }
 
     //when player hits ENTER, move cursor to a new line, and look at next customer

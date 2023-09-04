@@ -8,19 +8,19 @@ public class CustomerDialogue : MonoBehaviour
     [SerializeField] ServerNotes serverNotes;
     [SerializeField] TextMeshProUGUI orderingDialogueText;
     [SerializeField] float typewriterEffectDelay;
-    [SerializeField] float nextCustomerOrderDelay;
+    //[SerializeField] float nextCustomerOrderDelay;
     [SerializeField] GameObject player;
 
-    TableController tableController;
-    CameraController cameraController;
     string orderText;
     public int currentCustomerIndex;
 
-    //bool typewriterIsRunning;
     Coroutine dialogueCoroutine;
+    TableController tableController;
+    CameraController cameraController;
     private void Awake()
     {
         cameraController = FindObjectOfType<CameraController>();
+
     }
 
     public void SetOrderDialogue(string order)
@@ -78,7 +78,7 @@ public class CustomerDialogue : MonoBehaviour
             return;
         }
         
-        if(currentCustomerIndex + 1 < seatedCustomers.Count)
+        if(currentCustomerIndex < seatedCustomers.Count - 1)
         {
             currentCustomerIndex += 1;
             CustomerController customer = seatedCustomers[currentCustomerIndex].GetComponent<CustomerController>();
@@ -86,6 +86,8 @@ public class CustomerDialogue : MonoBehaviour
             GenerateOrderDialogue(customer.GetFullCustomerOrder());
             customer.SetHasOrdered();
             dialogueCoroutine = StartCoroutine(TypewriteOrder(orderText));
+            serverNotes.nextCustomerButtonText.text = "Next Customer";
+            CheckNextCustomerButton(currentCustomerIndex, seatedCustomers.Count); //check if this works
         }
         
         else
@@ -93,6 +95,14 @@ public class CustomerDialogue : MonoBehaviour
             serverNotes.gameObject.SetActive(false);
             cameraController.SwitchCameras();
             player.GetComponent<PlayerInteraction>().playerInput.SwitchCurrentActionMap("Player");
+        }
+    }
+
+    public void CheckNextCustomerButton(int nextCustomer, int partySize)
+    {
+        if(nextCustomer == partySize - 1)
+        {
+            serverNotes.nextCustomerButtonText.text = "Finish Taking Order";
         }
     }
 }

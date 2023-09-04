@@ -9,6 +9,9 @@ public class UIController : MonoBehaviour
     [SerializeField] public TextMeshProUGUI totalSalesText;
     [SerializeField] public TextMeshProUGUI totalTipsText;
     [SerializeField] public TextMeshProUGUI totalTipsPercentText;
+    [SerializeField] public TextMeshProUGUI tipoutText;
+    [SerializeField] public TextMeshProUGUI totalEarningsText;
+    [SerializeField] public GameObject cameraReticle;
     [SerializeField] GameObject StepsOfServiceInstructions;
     [SerializeField] TextMeshProUGUI stepsOfServiceReminder;
     [SerializeField] TextMeshProUGUI lastTableTouchedText;
@@ -21,16 +24,18 @@ public class UIController : MonoBehaviour
     PlayerInteraction playerInteraction;
     ScoreKeeper scoreKeeper;
     LevelManager levelManager;
+    PauseMenuController pauseMenuController;
 
     private void Awake()
     {
         playerInteraction = FindObjectOfType<PlayerInteraction>();
         scoreKeeper = FindObjectOfType<ScoreKeeper>();
-        levelManager = FindObjectOfType<LevelManager>();
     }
     private void Start()
     {
         scoreKeeper.CallScore();
+        pauseMenuController = GetComponent<PauseMenuController>();
+        levelManager = GetComponent<LevelManager>();
     }
 
     // Update is called once per frame
@@ -54,7 +59,10 @@ public class UIController : MonoBehaviour
             hours += 1;
             minutes = 0f;
         }
-        timeText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds) + " PM";
+        if(timeText != null)
+        {
+            timeText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds) + " PM";
+        }
 
         if(hours + (minutes + (seconds / 60)) / 60 >= 11.5)
         {
@@ -115,14 +123,18 @@ public class UIController : MonoBehaviour
 
     public void DisplayLastTableTouched()
     {
-        if(playerInteraction.GetLastTableTouched() != null)
+        if(playerInteraction != null)
         {
-            lastTableTouchedText.text = "Last Table Touched: " + playerInteraction.GetLastTableTouched().name;
+            if(playerInteraction.GetLastTableTouched() != null)
+            {
+                lastTableTouchedText.text = "Last Table Touched: " + playerInteraction.GetLastTableTouched().name;
+            }
+            else
+            {
+                lastTableTouchedText.text = "Last Table Touched: ";
+            }
         }
-        else
-        {
-            lastTableTouchedText.text = "Last Table Touched: ";
-        }
+
     }
 
     public void SetSalesAndTipsText(float sales, float tips)

@@ -29,4 +29,9 @@ public class StartMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Start Menu");
     }
+
+    public void OpenIntroduction()
+    {
+        SceneManager.LoadScene("Introduction");
+    }
 }
