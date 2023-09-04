@@ -17,3 +17,4 @@ MonoBehaviour:
   baseCost: 5
   taxRate: 0.01
   ticketTimeSeconds: 15
+  classification: NA Beverage

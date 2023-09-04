@@ -16,4 +16,5 @@ MonoBehaviour:
   description: Cold shrimp with tartar sauce
   baseCost: 9.99
   taxRate: 0.01
-  ticketTimeSeconds: 10
+  ticketTimeSeconds: 15
+  classification: Appetizer

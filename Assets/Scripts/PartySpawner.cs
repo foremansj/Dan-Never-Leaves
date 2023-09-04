@@ -5,11 +5,14 @@ using UnityEngine;
 public class PartySpawner : MonoBehaviour
 {
     HostStand hostStand;
+    UIController uIController;
     
     [Header("Customer Spawning")]
     [SerializeField] GameObject customerPrefab;
-    [SerializeField] Vector3 spawnPointOrigin;
+    [SerializeField] public Vector3 spawnPointOrigin;
+    [SerializeField] public GameObject exitPoint;
     public float customerSpawnDelay;
+    Coroutine createParty;
 
     [SerializeField] bool isOpenForBusiness = true;
 
@@ -20,7 +23,8 @@ public class PartySpawner : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(CreateNewParty());
+        uIController = GetComponent<UIController>();
+        createParty = StartCoroutine(CreateNewParty());
     }
 
     private void Update()
@@ -33,7 +37,7 @@ public class PartySpawner : MonoBehaviour
         do
         {
             startOver:
-                int partySize = Random.Range(2,6);
+                int partySize = Random.Range(2,7);
                 GameObject newParty = new GameObject("Party of " + partySize);
                 newParty.AddComponent<PartyController>();
                 for(int i = 0; i < partySize; i++)
@@ -50,38 +54,84 @@ public class PartySpawner : MonoBehaviour
 
     void SetCustomerSpawnSpeed()
     {
-        switch(Time.time)
+        switch(uIController.GetWorldTime())
+        {
+            case float n when (n <= 6):
+                customerSpawnDelay = 40f;
+                //isOpenForBusiness = true;
+                break;
+
+            case float n when (n > 6 && n <= 7):
+                customerSpawnDelay = 50f;
+                //isOpenForBusiness = true;
+                break;
+            
+            case float n when (n > 7 && n <= 8):
+                customerSpawnDelay = 30f;
+                //isOpenForBusiness = true;
+                break;
+            
+            case float n when (n > 8 && n <= 8.5):
+                customerSpawnDelay = 40f;
+                //isOpenForBusiness = true;
+                break;
+            
+            case float n when (n > 8.5 && n <= 9):
+                customerSpawnDelay = 50f;
+                //isOpenForBusiness = false;
+                break;
+            
+            case float n when (n > 9 && n <= 10):
+                customerSpawnDelay = 70f;
+                //isOpenForBusiness = false;
+                break;
+            case float n when (n > 10 && n <= 10.5):
+                customerSpawnDelay = 90f;
+                //isOpenForBusiness = false;
+                break;
+
+            default:
+                StopCoroutine(createParty);
+                customerSpawnDelay = 100000f;
+                break;
+        }
+        /*switch(Time.time)
         {
             case float n when (n <= 60):
-                customerSpawnDelay = 35f;
+                customerSpawnDelay = 40f;
                 //isOpenForBusiness = true;
                 break;
 
             case float n when (n > 60 && n <= 120):
-                customerSpawnDelay = 25f;
+                customerSpawnDelay = 50f;
                 //isOpenForBusiness = true;
                 break;
             
             case float n when (n > 120 && n <= 180):
-                customerSpawnDelay = 20f;
+                customerSpawnDelay = 45f;
                 //isOpenForBusiness = true;
                 break;
             
-            case float n when (n > 180 && n <= 240):
-                customerSpawnDelay = 35f;
+            case float n when (n > 180 && n <= 300):
+                customerSpawnDelay = 55f;
                 //isOpenForBusiness = true;
                 break;
             
-            case float n when (n > 240 && n <= 300):
+            case float n when (n > 300 && n <= 420):
                 customerSpawnDelay = 45f;
                 //isOpenForBusiness = false;
                 break;
             
-            default:
-                customerSpawnDelay = 100000f;
-                StopCoroutine(CreateNewParty());
+            case float n when (n > 420 && n <= 540):
+                customerSpawnDelay = 55f;
+                //isOpenForBusiness = false;
                 break;
-        }
+
+            default:
+                customerSpawnDelay = 70f;
+                //StopCoroutine(CreateNewParty());
+                break;
+        }*/
     }
 
     public bool GetIsOpenForBusiness()

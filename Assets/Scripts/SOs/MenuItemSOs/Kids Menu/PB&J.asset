@@ -16,4 +16,5 @@ MonoBehaviour:
   description: 
   baseCost: 9.99
   taxRate: 0.01
-  ticketTimeSeconds: 15
+  ticketTimeSeconds: 30
+  classification: Kids Menu

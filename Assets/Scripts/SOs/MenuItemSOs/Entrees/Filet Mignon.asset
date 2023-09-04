@@ -16,4 +16,5 @@ MonoBehaviour:
   description: 8 oz filet mignon
   baseCost: 39.99
   taxRate: 0.01
-  ticketTimeSeconds: 45
+  ticketTimeSeconds: 50
+  classification: Entree

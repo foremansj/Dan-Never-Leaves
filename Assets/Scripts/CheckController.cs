@@ -25,13 +25,19 @@ public class CheckController : MonoBehaviour
     public float discountsAmount;
     public float tipAmount;
     public float tipPercent;
+    public bool isReadyToClose = false;
+    public bool justNeedsATip = false;
 
     KitchenWindowController kitchenWindowController;
+    UIController uIController;
+    ScoreKeeper scoreKeeper;
     public PartyController partyController;
     
     private void Awake()
     {
         kitchenWindowController = FindObjectOfType<KitchenWindowController>();
+        uIController = FindObjectOfType<UIController>();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
     }
 
     private void Start()
@@ -115,6 +121,32 @@ public class CheckController : MonoBehaviour
 
     public void CloseCheck()
     {
-        
+        if(isReadyToClose)
+        {
+            scoreKeeper.IncrementTotalSales(subtotal);
+            scoreKeeper.IncrementTipsPercent();
+            justNeedsATip = true;
+        }
+    }
+
+    public void SignReceiptTipAndLeave()
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            float randomTip = Random.Range(.15f, .25f);
+            if(randomTip > tipPercent)
+            {
+                tipPercent = randomTip;
+            }
+        }
+        tipAmount = subtotal * tipPercent;
+        scoreKeeper.IncrementTotalTips(tipAmount);
+        scoreKeeper.IncrementTipsPercent();
+        //move check to database or simply add numbers to UI counter
+        //maybe saving checks in a database is a later thing
+        partyController.LeaveRestaurant();
+        Destroy(this, 5f);
+        //put table back on host's open table list
+        //delete/clear table notes
     }
 }

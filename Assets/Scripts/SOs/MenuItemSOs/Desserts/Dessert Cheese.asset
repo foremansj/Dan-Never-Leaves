@@ -16,4 +16,5 @@ MonoBehaviour:
   description: Assortment of savory cheeses, sweet spreads, and fruits
   baseCost: 15.99
   taxRate: 0.01
-  ticketTimeSeconds: 10
+  ticketTimeSeconds: 15
+  classification: Dessert

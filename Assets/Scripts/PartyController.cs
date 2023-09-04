@@ -11,7 +11,7 @@ public class PartyController : MonoBehaviour
     //public Dictionary<MenuItemSO, int> partyOrderDictionary = new Dictionary<MenuItemSO, int>();
 
     [Header("Host & Seating")]
-    public TableController tableDestination;
+    public TableController assignedTable;
     public List<GameObject> partyCustomers;
     public List<GameObject> seatsAtTable;
     [SerializeField] bool hasTable;
@@ -19,8 +19,9 @@ public class PartyController : MonoBehaviour
     CheckController checkController;
 
     public float paymentDelay;
-    public bool isReadyToPay = false;
-    public bool isPayingCheck = false;
+    public bool hasFullPartyOrdered = false;
+    public bool isReadyForCheck = false;
+    public bool hasDroppedCreditCard = false;
 
     private void Awake()
     {
@@ -38,6 +39,11 @@ public class PartyController : MonoBehaviour
         }
         CreateCheck();
         hostStand.partiesWaitingToBeSeated.Add(gameObject);
+    }
+    
+    private void Update()
+    {
+        CheckIfPartyHasOrdered();
     }
 
     void CreateCheck()
@@ -58,7 +64,7 @@ public class PartyController : MonoBehaviour
 
     public TableController GetTableDestination()
     {
-        return tableDestination;
+        return assignedTable;
     }
 
     public int GetPartySize()
@@ -68,7 +74,7 @@ public class PartyController : MonoBehaviour
 
     public void AssignTable(TableController table)
     {
-        tableDestination = table;
+        assignedTable = table;
         hasTable = true;
         table.SetActiveParty(gameObject.GetComponent<PartyController>());
     }
@@ -77,33 +83,67 @@ public class PartyController : MonoBehaviour
     {
         for(int i = 0; i < partyCustomers.Count; i++)
         {
-            GameObject seat = tableDestination.GetSeatAtSeatNumber(i);
+            GameObject seat = assignedTable.GetSeatAtSeatNumber(i);
             seatsAtTable.Add(seat);
             CustomerController customer = partyCustomers[i].GetComponent<CustomerController>();
             customer.customerSeat = seat;
             
-            tableDestination.AddOrderBySeatNumber(i, customer.GetFullCustomerOrder());
+            assignedTable.AddOrderBySeatNumber(i, customer.GetFullCustomerOrder());
             customer.AddOrderToCheck();
             
             customer.MoveToDestination(seat.transform);
         }
         checkController.ListOutOrder();
-        checkController.CalculateCheckTotals();
+        //checkController.CalculateCheckTotals();
     }
 
-    public IEnumerator PayCheck()
+    public void CheckIfFullPartyHasSat()
     {
-        paymentDelay = Random.Range(5f, 15f);
-        for(int i = 0; i < 5; i++)
+        int sitCounter = 0;
+        for(int i = 0; i < partyCustomers.Count; i++)
         {
-            float randomTip = Random.Range(.15f, .25f);
-            if(randomTip > checkController.tipPercent)
+            if(partyCustomers[i].GetComponent<CustomerController>().isSeated)
             {
-                checkController.tipPercent = randomTip;
+                sitCounter++;
+                if(sitCounter == partyCustomers.Count)
+                {
+                    assignedTable.isReadyToOrder = true;
+                }
             }
         }
-        checkController.tipAmount = checkController.subtotal * checkController.tipPercent;
-        checkController.CalculateCheckTotals();
-        yield return new WaitForSeconds(paymentDelay * Time.deltaTime);
+    }
+    public bool CheckIfPartyHasOrdered()
+    {
+        if(!hasFullPartyOrdered)
+        {
+            int orderCheck = 0;
+            for(int i = 0; i < partyCustomers.Count; i++)
+            {
+                if(partyCustomers[i].GetComponent<CustomerController>().hasOrdered)
+                {
+                    orderCheck++;
+                    if(orderCheck == partyCustomers.Count)
+                    {
+                        hasFullPartyOrdered = true;
+                        return hasFullPartyOrdered;
+                    }
+                }
+            }
+            return hasFullPartyOrdered;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public void LeaveRestaurant()
+    {
+        for(int i = 0; i < partyCustomers.Count; i++)
+        {
+            CustomerController customer = partyCustomers[i].GetComponent<CustomerController>();
+            customer.isLeaving = true;
+            customer.LeaveRestaurant();
+        }
     }
 }

@@ -33,7 +33,10 @@ public class CustomerController : MonoBehaviour
 
     [SerializeField] float eatingDuration;
     public float eatingSpeedModifier;
-    bool isEating;
+    public bool isEating;
+    public bool isDoneEating;
+    public bool reachedExit;
+    public bool isLeaving;
 
     void Awake()
     {
@@ -52,14 +55,23 @@ public class CustomerController : MonoBehaviour
             isChild = true;
         }
 
-        eatingDuration = Random.Range(35f, 55f);
+        eatingDuration = Random.Range(60f, 100f);
         
         GenerateOrder();
     }
 
     void Update()
     {
-        partyTable = party.tableDestination;
+        partyTable = party.assignedTable;
+        if(reachedExit && isLeaving)
+        {
+            Destroy(party.gameObject,2f);
+            Destroy(gameObject, 2f);
+        }
+        if(isLeaving)
+        {
+            MoveToDestination(FindObjectOfType<PartySpawner>().exitPoint.transform);
+        }
     }
 
     public void MoveToDestination(Transform transform)
@@ -77,25 +89,31 @@ public class CustomerController : MonoBehaviour
     {
         if(partyTable != null)
         {
-            if(other.gameObject == party.tableDestination.gameObject)
+            if(other.gameObject == party.assignedTable.gameObject)
             {
                 thisAgent.enabled = false;
                 thisObstacle.enabled = true;
-                transform.LookAt(party.tableDestination.transform);
+                transform.LookAt(party.assignedTable.transform);
                 thisRigidbody.constraints = RigidbodyConstraints.FreezePosition;
                 thisRigidbody.isKinematic = true;
                 gameObject.transform.position = customerSeat.transform.position;
                 isSeated = true;
                 other.GetComponent<TableController>().hasCustomersSeated = true;
+                party.CheckIfFullPartyHasSat();
             }
+        }
+
+        if(other.tag == "Exit" && isLeaving)
+        {
+            reachedExit = true;
         }
     }
 
     private void GenerateOrder()
-    {
+    {//additional course orders commented out for testing, add back later
         if(!hasOrdered && !isChild)
         {
-            bool gettingAppetizer = Random.value > 0.5f;
+            /*bool gettingAppetizer = Random.value > 0.5f;
             bool gettingDessert = Random.value > 0.5f;
             
             drink = menuDatabase.GetRandomDrink();
@@ -104,23 +122,22 @@ public class CustomerController : MonoBehaviour
             {
                 firstCourse = menuDatabase.GetRandomAppetizer();
                 fullOrder.Add(firstCourse);
-            }
+            }*/
             mainCourse = menuDatabase.GetRandomEntree();
             fullOrder.Add(mainCourse);
             
-            if(gettingDessert)
+            /*if(gettingDessert)
             {
                 dessert = menuDatabase.GetRandomDessert();
                 fullOrder.Add(dessert);
-            }
+            }*/
         }
         else if(!hasOrdered && isChild)
         {
-            drink = menuDatabase.GetKidsDrink();
-            fullOrder.Add(drink);
+            //drink = menuDatabase.GetKidsDrink();
+            //fullOrder.Add(drink);
             mainCourse = menuDatabase.GetRandomKidsMenuItem();
             fullOrder.Add(mainCourse);
-
         }
     }
 
@@ -154,13 +171,17 @@ public class CustomerController : MonoBehaviour
             }
             yield return null;
         }
+        isDoneEating = true;
+        if(partyTable.CheckIfTableIsDoneEating())
+        {
+            partyTable.isReadyToBus = true;
+        }
     }
 
-    public bool GetIsEating()
+    /*public bool GetIsEating()
     {
         return isEating;
-    }
-    
+    }*/
 
     void AdjustHappiness()
     {
@@ -175,5 +196,17 @@ public class CustomerController : MonoBehaviour
     public GameObject GetCustomerHead()
     {
         return customerHead;
+    }
+
+    public void SetHasOrdered()
+    {
+        hasOrdered = true;
+    }
+
+    public void LeaveRestaurant()
+    {
+        thisObstacle.enabled = false;
+        transform.position += new Vector3(0, 0.53f, 0);
+        thisAgent.enabled = true;
     }
 }

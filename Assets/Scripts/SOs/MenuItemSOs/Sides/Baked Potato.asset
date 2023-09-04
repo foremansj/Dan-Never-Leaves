@@ -17,3 +17,4 @@ MonoBehaviour:
   baseCost: 9.99
   taxRate: 0.01
   ticketTimeSeconds: 30
+  classification: Sides

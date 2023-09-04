@@ -8,18 +8,19 @@ public class CustomerDialogue : MonoBehaviour
     [SerializeField] ServerNotes serverNotes;
     [SerializeField] TextMeshProUGUI orderingDialogueText;
     [SerializeField] float typewriterEffectDelay;
+    //[SerializeField] float nextCustomerOrderDelay;
     [SerializeField] GameObject player;
 
-    TableController tableController;
-    CameraController cameraController;
     string orderText;
     public int currentCustomerIndex;
 
-    //bool typewriterIsRunning;
     Coroutine dialogueCoroutine;
+    TableController tableController;
+    CameraController cameraController;
     private void Awake()
     {
         cameraController = FindObjectOfType<CameraController>();
+
     }
 
     public void SetOrderDialogue(string order)
@@ -32,7 +33,7 @@ public class CustomerDialogue : MonoBehaviour
         orderText = "I would like the ";
         for(int i = 0; i < order.Count; i++)
         {
-            orderText += (order[i].ToString() + "\n");
+            orderText += order[i].ToString() + "\n";
         }
         orderText = orderText.Replace("(MenuItemSO)", "");
         return orderText;
@@ -47,7 +48,6 @@ public class CustomerDialogue : MonoBehaviour
     {
         if(order != null)
         {
-            //typewriterIsRunning = true;
             orderingDialogueText.text = null;
             foreach(char letter in order)
             {
@@ -61,8 +61,6 @@ public class CustomerDialogue : MonoBehaviour
 
     public void StartTypewriterCoroutine(string order)
     {
-        //StopCoroutine(nameof(TypewriteOrder));
-        //orderingDialogueText.text = null;
         dialogueCoroutine = StartCoroutine(TypewriteOrder(order));
     }
 
@@ -80,29 +78,31 @@ public class CustomerDialogue : MonoBehaviour
             return;
         }
         
-        if(currentCustomerIndex + 1 < seatedCustomers.Count)
+        if(currentCustomerIndex < seatedCustomers.Count - 1)
         {
             currentCustomerIndex += 1;
             CustomerController customer = seatedCustomers[currentCustomerIndex].GetComponent<CustomerController>();
             cameraController.HardLookAtObject(customer.GetCustomerHead());
             GenerateOrderDialogue(customer.GetFullCustomerOrder());
+            customer.SetHasOrdered();
             dialogueCoroutine = StartCoroutine(TypewriteOrder(orderText));
+            serverNotes.nextCustomerButtonText.text = "Next Customer";
+            CheckNextCustomerButton(currentCustomerIndex, seatedCustomers.Count); //check if this works
         }
-
-        /*else if(currentCustomerIndex + 1 == seatedCustomers.Count)
-        {
-            CustomerController customer = seatedCustomers[currentCustomerIndex].GetComponent<CustomerController>();
-            cameraController.HardLookAtObject(customer.GetCustomerHead());
-            GenerateOrderDialogue(customer.GetFullCustomerOrder());
-            dialogueCoroutine = StartCoroutine(TypewriteOrder(orderText));
-
-            //remove next customer button and/or make it save the notes
-        }*/
+        
         else
         {
             serverNotes.gameObject.SetActive(false);
             cameraController.SwitchCameras();
             player.GetComponent<PlayerInteraction>().playerInput.SwitchCurrentActionMap("Player");
+        }
+    }
+
+    public void CheckNextCustomerButton(int nextCustomer, int partySize)
+    {
+        if(nextCustomer == partySize - 1)
+        {
+            serverNotes.nextCustomerButtonText.text = "Finish Taking Order";
         }
     }
 }
