@@ -133,7 +133,7 @@ public class PauseMenuController : MonoBehaviour
         mouseSensitivitySlider.maxValue = sensitivityCeiling;
         float sliderPercent = Mathf.Round((mouseSensitivitySlider.value / sensitivityCeiling) * 100);
         sensitivityValueText.text = sliderPercent.ToString();
-        firstPersonCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = mouseSensitivitySlider.value;
+        firstPersonCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = mouseSensitivitySlider.value * 0.5f;
         firstPersonCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = mouseSensitivitySlider.value;
     }
 }

@@ -26,8 +26,10 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleRotation()
     {
-        Quaternion cameraRotation = Camera.main.transform.rotation;
-        gameObject.transform.rotation = new Quaternion(0, cameraRotation.y, 0, cameraRotation.w);
+        // added Time.deltaTime to try and smooth camera rotation, not sure this is in right place
+        // or is right at all
+        Quaternion cameraRotation = Camera.main.transform.rotation; 
+        gameObject.transform.rotation = new Quaternion(0, cameraRotation.y * Time.deltaTime, 0, cameraRotation.w * Time.deltaTime);
     }
 
     void OnMove(InputValue value)
